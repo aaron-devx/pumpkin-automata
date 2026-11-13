@@ -35,7 +35,7 @@ function runDfa(machine, input) {
       return { ok: true, accepted: false, reason: 'reject: dead state', trace, states: [state] };
     }
     state = next;
-    trace.push({ step: i + 1, read: input.slice(0, i + 1), state, note: `read ${sym}` });
+    trace.push({ step: i + 1, read: input.slice(0, i + 1), state, char: sym, note: `read ${sym}` });
   }
 
   const accepted = machine.accept.includes(state);
@@ -102,7 +102,7 @@ function runNfa(machine, input) {
       trace.push({ step: i + 1, read: input.slice(0, i + 1), states: [], note: `no path on ${sym}` });
       return { ok: true, accepted: false, reason: 'reject: no active states', trace, states: [] };
     }
-    trace.push({ step: i + 1, read: input.slice(0, i + 1), states: current, note: `read ${sym}` });
+    trace.push({ step: i + 1, read: input.slice(0, i + 1), states: current, char: sym, note: `read ${sym}` });
   }
 
   const accepted = current.some((s) => machine.accept.includes(s));

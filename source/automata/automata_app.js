@@ -1,4 +1,4 @@
-import { MACHINES, getMachine } from './machines.js';
+import { MACHINES, getMachine, layoutEdges } from './machines.js';
 import { run } from './simulator.js';
 
 /** @type {{ machine: import('./machines.js').Machine, result: ReturnType<typeof run> } | null} */
@@ -16,6 +16,7 @@ const els = {
   table: () => document.getElementById('transition-table'),
   diagram: () => document.getElementById('state-diagram'),
   machineNote: () => document.getElementById('machine-note'),
+  samples: () => document.getElementById('sample-chips'),
 };
 
 function fillMachines() {
@@ -42,6 +43,29 @@ function machineStates(m) {
   return [...set].sort();
 }
 
+function renderSamples(m) {
+  const box = els.samples();
+  if (!box) return;
+  box.replaceChildren();
+  const title = document.createElement('span');
+  title.className = 'muted';
+  title.textContent = 'Try:';
+  box.appendChild(title);
+  for (const { s, hint } of m.samples ?? []) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'chip';
+    btn.title = hint;
+    btn.textContent = s;
+    btn.addEventListener('click', () => {
+      const input = els.input();
+      if (input) input.value = s;
+      execute(true);
+    });
+    box.appendChild(btn);
+  }
+}
+
 function renderTransitionTable(m) {
   const wrap = els.table();
   if (!wrap) return;
@@ -61,28 +85,56 @@ function renderTransitionTable(m) {
   wrap.innerHTML = `<table class="delta">${hdr}${rows}</table>`;
 }
 
-function renderDiagram(m, active) {
+function nodePos(m, id) {
+  const hit = m.layout?.nodes.find((n) => n.id === id);
+  if (hit) return hit;
+  const states = machineStates(m);
+  const i = states.indexOf(id);
+  return { id, x: 40 + i * 72, y: 70 };
+}
+
+function edgePath(x1, y1, x2, y2) {
+  const mx = (x1 + x2) / 2;
+  const my = (y1 + y2) / 2 - 18;
+  return `M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`;
+}
+
+function renderDiagram(m, active, prev, hotChar) {
   const svg = els.diagram();
   if (!svg) return;
-  const states = machineStates(m);
-  const w = 520;
-  const h = 120;
-  const pad = 36;
-  const step = states.length > 1 ? (w - pad * 2) / (states.length - 1) : 0;
-  const nodes = states
-    .map((q, i) => {
-      const x = pad + step * i;
-      const y = h / 2;
-      const on = active.includes(q);
-      const acc = m.accept.includes(q);
+  const edges = layoutEdges(m);
+  const w = m.layout?.width ?? 420;
+  const h = m.layout?.height ?? 160;
+  const edgeSvg = edges
+    .map(({ from, to, sym }) => {
+      const a = nodePos(m, from);
+      const b = nodePos(m, to);
+      const on =
+        hotChar === sym &&
+        ((prev.includes(from) && active.includes(to)) ||
+          (from === to && active.includes(from) && prev.includes(from)));
+      const stroke = on ? '#f58a45' : '#94a8b5';
+      const sw = on ? 3.2 : 1.6;
+      const d = edgePath(a.x, a.y, b.x, b.y);
+      const lx = (a.x + b.x) / 2;
+      const ly = (a.y + b.y) / 2 - 22;
+      return `<path d="${d}" fill="none" stroke="${stroke}" stroke-width="${sw}"/><text x="${lx}" y="${ly}" text-anchor="middle" font-size="11" fill="${on ? '#f58a45' : '#5a6b75}" font-family="Poppins,sans-serif">${sym}</text>`;
+    })
+    .join('');
+  const nodes = machineStates(m)
+    .map((id) => {
+      const { x, y } = nodePos(m, id);
+      const on = active.includes(id);
+      const acc = m.accept.includes(id);
       const r = acc ? 22 : 18;
       const fill = on ? '#f58a45' : acc ? '#55b45c' : '#e9f7ff';
       const stroke = on ? '#0d2230' : '#14425b';
-      return `<g><circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="2"/><text x="${x}" y="${y + 5}" text-anchor="middle" font-size="12" fill="#0d2230" font-family="Poppins,sans-serif">${q}</text></g>`;
+      const ring = acc ? `<circle cx="${x}" cy="${y}" r="${r + 5}" fill="none" stroke="#55b45c" stroke-width="2"/>` : '';
+      return `<g>${ring}<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="2"/><text x="${x}" y="${y + 4}" text-anchor="middle" font-size="12" fill="#0d2230" font-family="Poppins,sans-serif">${id}</text></g>`;
     })
     .join('');
   svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-  svg.innerHTML = nodes;
+  svg.innerHTML = `${edgeSvg}${nodes}`;
 }
 
 function syncStepControls(max) {
@@ -92,22 +144,35 @@ function syncStepControls(max) {
   range.min = '0';
   range.max = String(Math.max(0, max));
   range.value = String(stepIndex);
+  range.disabled = max === 0;
   if (label) label.textContent = `Step ${stepIndex} / ${max}`;
+}
+
+function prevStates(machine, row, prevRow) {
+  if (machine.kind === 'DFA') {
+    if (!prevRow) return row?.state ? [machine.start] : [];
+    return prevRow.state ? [prevRow.state] : [];
+  }
+  if (!prevRow) return [machine.start];
+  return prevRow.states ?? [];
 }
 
 function highlightStep() {
   if (!session) return;
   const { machine, result } = session;
   const row = result.trace[stepIndex];
+  const prevRow = stepIndex > 0 ? result.trace[stepIndex - 1] : null;
   const active =
     machine.kind === 'DFA'
       ? row && row.state
         ? [row.state]
-        : []
+        : [machine.start]
       : row && row.states
         ? row.states
-        : [];
-  renderDiagram(machine, active);
+        : [machine.start];
+  const prev = prevStates(machine, row, prevRow);
+  const hotChar = row?.char ?? '';
+  renderDiagram(machine, active, prev, hotChar);
   els.traceBody()?.querySelectorAll('tr').forEach((tr, i) => {
     tr.classList.toggle('on', i === stepIndex);
   });
@@ -169,18 +234,18 @@ function execute(scrollToLab) {
   }
 }
 
+function selectMachine(id) {
+  const m = getMachine(id);
+  renderTransitionTable(m);
+  renderSamples(m);
+  renderDiagram(m, [m.start], [m.start], '');
+}
+
 function bind() {
   fillMachines();
   const sel = els.machine();
-  sel?.addEventListener('change', () => {
-    renderTransitionTable(getMachine(sel.value));
-    renderDiagram(getMachine(sel.value), [getMachine(sel.value).start]);
-  });
-  if (sel) {
-    const m = getMachine(sel.value);
-    renderTransitionTable(m);
-    renderDiagram(m, [m.start]);
-  }
+  sel?.addEventListener('change', () => selectMachine(sel.value));
+  if (sel) selectMachine(sel.value);
 
   document.getElementById('run-hero')?.addEventListener('click', () => execute(true));
   document.getElementById('run-lab')?.addEventListener('click', () => execute(false));
