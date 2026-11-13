@@ -1,0 +1,169 @@
+:root {
+  --navy: #0d2230;
+  --ink: #0e2433;
+  --orange: #f58a45;
+  --mint: #e8f4f8;
+  --pad: clamp(20px, 5vw, 48px);
+  --maxw: 960px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Poppins, system-ui, sans-serif;
+  color: var(--navy);
+  background: linear-gradient(180deg, #f0f8fc 0%, #fff 40%);
+  line-height: 1.5;
+}
+
+a {
+  color: var(--orange);
+  font-weight: 600;
+}
+
+header {
+  padding: var(--pad);
+  max-width: calc(var(--maxw) + 2 * var(--pad));
+  margin: 0 auto;
+}
+
+header h1 {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  margin: 0 0 0.35rem;
+  letter-spacing: -0.03em;
+}
+
+header p {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.85;
+  max-width: 42em;
+}
+
+main {
+  max-width: calc(var(--maxw) + 2 * var(--pad));
+  margin: 0 auto;
+  padding: 0 var(--pad) 3rem;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #d9e6ee;
+  border-radius: 16px;
+  padding: 1.25rem 1.35rem;
+  box-shadow: 0 12px 40px -28px rgba(13, 34, 48, 0.35);
+}
+
+label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #5a6b75;
+  margin-bottom: 0.4rem;
+}
+
+select,
+input[type='text'] {
+  width: 100%;
+  font: inherit;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid #c5d5de;
+  border-radius: 10px;
+  background: #fafcfd;
+}
+
+select:focus,
+input:focus {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+
+.row {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .row-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+button.run {
+  margin-top: 0.75rem;
+  width: 100%;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.85rem 1.25rem;
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(90deg, #f58a45, #f7a464);
+  cursor: pointer;
+}
+
+button.run:hover {
+  filter: brightness(1.03);
+}
+
+.verdict {
+  font-size: 1.35rem;
+  font-weight: 700;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.verdict.accept {
+  color: #1a7f4b;
+}
+
+.verdict.reject {
+  color: #b42318;
+}
+
+.verdict.invalid {
+  color: #9a6700;
+}
+
+.muted {
+  font-size: 0.9rem;
+  color: #5a6b75;
+}
+
+table.trace {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+table.trace th,
+table.trace td {
+  text-align: left;
+  padding: 0.45rem 0.5rem;
+  border-bottom: 1px solid #e8eef2;
+}
+
+table.trace th {
+  color: #5a6b75;
+  font-weight: 600;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
+  background: var(--mint);
+  color: var(--ink);
+  vertical-align: middle;
+  margin-left: 0.35rem;
+}

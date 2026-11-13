@@ -8,3 +8,8 @@ Run with any static server from this folder, e.g. `python3 -m http.server 5500`,
   renders and the CSS loops still run. `prefers-reduced-motion` turns motion off.
 * Regenerate: `cd source && python3 hero.py && python3 scenes.py && python3 build_site.py`
   (writes svg/*.svg, index.html and main.js into the parent folder).
+
+## AL102 branch (`al102-automata`)
+
+* **Lab UI:** `al102/index.html` — DFA/NFA string checker (prof slides Week 7 / 10).
+* Serve from repo root: `python3 -m http.server 5500` → http://localhost:5500/al102/

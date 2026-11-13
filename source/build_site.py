@@ -31,14 +31,36 @@ STAR='<svg width="30" height="29" viewBox="0 0 24 23"><path d="M12 1l3.1 6.6 7.2
 WAVE='<svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="10" fill="#1f5fe0"/><path d="M2 9c3-2 6 1 9-1s6-2 9 0M2 13c3-2 6 1 9-1s6-2 9 0M4 17c3-2 5 1 7 0s5-2 7 0" stroke="#fff" stroke-width="1.6" fill="none"/></svg>'
 PIN='<svg width="14" height="16" viewBox="0 0 14 16"><path d="M7 15s5.5-5 5.5-9A5.5 5.5 0 0 0 1.5 6c0 4 5.5 9 5.5 9z" fill="#22c1c3"/><circle cx="7" cy="6" r="2" fill="#fff"/></svg>'
 def cards():
-    C=[('card1','Kintamani',4,'8/10',100),('card2','Nusa Penida',5,'9/10',150),('card3','Broken Beach',4,'8/10',120)]
-    return ''.join(f'<article class="card" data-card><div class="img"><img src="svg/{c}.svg" alt="{n} illustration" width="398" height="330" loading="lazy"></div><div class="body"><h3>{n}</h3><div class="rate"><span class="stars" aria-label="{st} stars">{STAR*st}</span><span class="dot"></span>{WAVE}<span>{r}</span></div><div class="loc">{PIN}Bali, indonesia</div><div class="price">$ {p}<span>/Person</span></div></div></article>' for c,n,st,r,p in C)
+    C=[
+        ('card1','Begin with 0',4,'DFA',100),
+        ('card2','Ends with 10',5,'DFA',150),
+        ('card3','Contains bab',4,'DFA',120),
+    ]
+    return ''.join(
+        f'<article class="card" data-card><div class="img"><img src="svg/{c}.svg" alt="{n} illustration" width="398" height="330" loading="lazy"></div>'
+        f'<div class="body"><h3>{n}</h3><div class="rate"><span class="stars" aria-label="{st} stars">{STAR*st}</span><span class="dot"></span>{WAVE}'
+        f'<span>{r}</span></div><div class="loc">{PIN}AL102 · Week 7–10</div><div class="price">{p}<span> / problem</span></div></div></article>'
+        for c,n,st,r,p in C
+    )
 def plans():
     chk='<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8" fill="currentColor"/><path d="M5.2 9.2l2.5 2.4 5-5" stroke="var(--bg)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-    P=[('Adventure<br>Explorer',599,'Thrill Seeker’s Delight',['Guided Mountain Trek','White-Water Rafting','Camping Under The Stars'],'Book Your Adventure Now',''),
-       ('Cultural<br>Discovery',749,'Cultural Odyssey',['Guided City Tours','Traditional Cooking Classes','Cultural Performances'],'Start Your Cultural Journey','dk'),
-       ('Relaxation<br>Retreat',899,'Tranquil Escapes',['Spa Retreat','Beachside Relaxation','Yoga And Meditation Sessions'],'Book Your Adventure Now','')]
-    return ''.join(f'<div class="plan-col" data-plan><div class="plan {k}"><h3>{h}</h3><div class="amt"><sup>$</sup>{a}</div><h5>{t}</h5><hr><ul>{"".join(f"<li>{chk}{x}</li>" for x in L)}</ul><a class="cta" href="#">{c}</a></div><div class="review">Photo Review</div></div>' for h,a,t,L,c,k in P)
+    P=[
+        ('Pick<br>Machine','01','Choose a finite acceptor',['Open the dropdown in the hero','Match the slide problem','DFA or NFA badge shown'],'Open lab',''),
+        ('Type<br>String','02','Symbols from Σ',['Use only letters in Σ','Example: 1010 or bab','Invalid chars → INVALID'],'Try the hero','dk'),
+        ('Trace +<br>Verdict','03','Step the run',['Slider or Next / Back','Highlight active state(s)','ACCEPT or REJECT at end'],'#lab',''),
+    ]
+    return ''.join(
+        f'<div class="plan-col" data-plan><div class="plan {k}"><h3>{h}</h3><div class="amt step-num">{a}</div>'
+        f'<h5>{t}</h5><hr><ul>{"".join(f"<li>{chk}{x}</li>" for x in L)}</ul>'
+        f'<a class="cta" href="{c}">Go</a></div><div class="review">AL102</div></div>'
+        for h,a,t,L,c,k in P
+    )
+def copy_automata():
+    import shutil
+    dst=os.path.join(SITE,'automata')
+    os.makedirs(dst,exist_ok=True)
+    for name in ('machines.js','simulator.js','automata_app.js'):
+        shutil.copy(os.path.join(HERE,'automata',name),os.path.join(dst,name))
 def main():
     tpl=open(os.path.join(HERE,'template.html')).read()
     tpl=tpl.replace('{{HERO_ART}}',hero_markup()).replace('{{CARDS}}',cards()).replace('{{PLANS}}',plans())
@@ -46,5 +68,6 @@ def main():
     tpl=tpl.replace('{{FOOTER_ART}}',inline_svg('footer_art.svg','f','foot-svg','xMidYMax slice'))
     open(os.path.join(SITE,'index.html'),'w').write(tpl)
     import shutil; shutil.copy(os.path.join(HERE,'main.js'),os.path.join(SITE,'main.js'))
+    copy_automata()
     print('index.html',len(tpl))
 if __name__=='__main__': main()

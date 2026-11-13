@@ -1,1 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34" width="34" height="34"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7a25e"/><stop offset="1" stop-color="#f27a3a"/></linearGradient><clipPath id="c"><circle cx="17" cy="17" r="16"/></clipPath></defs><g clip-path="url(#c)"><rect width="34" height="34" fill="url(#g)"/><path d="M-2 15c6-4 11 3 19-1s12-3 19 0M-2 21c6-4 11 3 19-1s12-3 19 0M-2 27c6-4 11 3 19-1s12-3 19 0" stroke="#fff" stroke-width="3" fill="none"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34" width="34" height="34" aria-hidden="true">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f7a25e"/>
+      <stop offset="1" stop-color="#f27a3a"/>
+    </linearGradient>
+    <clipPath id="c"><circle cx="17" cy="17" r="16"/></clipPath>
+  </defs>
+  <g clip-path="url(#c)">
+    <rect width="34" height="34" fill="url(#g)"/>
+    <path d="M-2 13c6-4 11 3 19-1s12-3 19 1M-2 19c6-4 11 3 19-1s12-3 19 1M-2 25c6-4 11 3 19-1s12-3 19 1" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <circle cx="9" cy="13" r="2.2" fill="#fff"/>
+    <circle cx="17" cy="19" r="2.2" fill="#fff"/>
+    <circle cx="25" cy="25" r="2.2" fill="#0d2230"/>
+  </g>
+</svg>

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>SnapTrips — Inspiring Explorations and Endless Possibilities</title>
-<meta name="description" content="Quick, easy and exciting travel experiences with SnapTrips.">
+<title>StateStream — AL102 Finite Acceptors</title>
+<meta name="description" content="AL102 automata lab: run strings on DFA and NFA with step-by-step traces.">
 <meta name="theme-color" content="#14425b">
 <link rel="icon" href="svg/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -164,6 +164,23 @@ button{font:inherit}
 .plan h3{font-family:'Plus Jakarta Sans';font-weight:600;font-size:clamp(30px,2.73vw,41px);line-height:1.27;letter-spacing:-.04em;margin:0}
 .plan .amt{position:relative;font-family:'Plus Jakarta Sans';font-weight:600;font-size:clamp(92px,9.4vw,142px);letter-spacing:-.05em;line-height:1.06;margin-top:clamp(24px,2.6vw,40px)}
 .plan .amt sup{position:absolute;font-size:.225em;line-height:1;left:-.3em;top:.18em}
+.plan .amt.step-num{font-size:clamp(72px,7vw,110px)}
+.lab-field select,.lab-field input{border:0;background:transparent;font:inherit;font-weight:600;font-size:14px;width:100%;color:inherit;outline:none}
+.lab{padding:clamp(72px,9vw,120px) 0;background:#f4fafc}
+.lab h2{font-size:clamp(36px,4vw,52px);letter-spacing:-.04em;margin:0 0 12px;color:var(--ink)}
+.lab-grid{display:grid;gap:28px;margin-top:28px}
+@media (min-width:900px){.lab-grid{grid-template-columns:1fr 1fr}}
+.lab-card{background:#fff;border-radius:18px;border:1px solid #d9e6ee;padding:22px 24px;box-shadow:0 16px 40px -28px rgba(13,34,48,.35)}
+.lab-verdict{font-family:'Plus Jakarta Sans';font-size:clamp(28px,3vw,40px);font-weight:700;margin:0}
+.lab-verdict.accept{color:#1a7f4b}.lab-verdict.reject{color:#b42318}.lab-verdict.invalid{color:#9a6700}
+.lab-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:16px}
+.lab-controls button{height:44px;padding:0 20px;border-radius:22px;border:0;background:var(--navy);color:#fff;font:inherit;font-weight:600;cursor:pointer}
+.lab-controls input[type=range]{flex:1;min-width:160px}
+table.delta,table.trace{width:100%;border-collapse:collapse;font-size:14px}
+table.delta th,table.delta td,table.trace th,table.trace td{padding:8px 10px;border-bottom:1px solid #e8eef2;text-align:left}
+table.trace tr.on{background:#fff4eb}
+#state-diagram{width:100%;height:auto;display:block}
+.muted{color:#5a6b75;font-size:14px}
 .plan h5{font-family:'Plus Jakarta Sans';font-weight:600;font-size:clamp(20px,1.6vw,24px);letter-spacing:-.03em;margin:clamp(36px,4vw,60px) 0 0}
 .plan hr{width:min(303px,86%);border:0;border-top:1.5px solid #b9c6cf;margin:18px auto 22px}
 .plan ul{list-style:none;margin:0 0 clamp(36px,4vw,64px);padding:0;text-align:left;font-size:clamp(16px,1.2vw,18px);line-height:36.5px;letter-spacing:-.02em}
@@ -290,15 +307,15 @@ footer{position:relative;background:linear-gradient(#14425b,#0f374e);color:#fff;
 <body>
 <header class="nav" id="nav">
  <div class="container">
-  <a class="logo" href="#top" aria-label="SnapTrips home"><img src="svg/logo.svg" width="34" height="34" alt="">SnapTrips</a>
-  <nav class="menu" aria-label="Primary"><a href="#top">Home</a><a href="#destinations">Destinations</a><a href="#packages">Packages</a><a href="#about">About Us</a></nav>
-  <div class="auth"><a href="#">Login</a><a class="reg" href="#">Register</a></div>
+  <a class="logo" href="#top" aria-label="StateStream home"><img src="svg/logo.svg" width="34" height="34" alt="">StateStream</a>
+  <nav class="menu" aria-label="Primary"><a href="#top">Lab</a><a href="#destinations">Problems</a><a href="#packages">Steps</a><a href="#lab">Trace</a></nav>
+  <div class="auth"><a href="#about">AL102</a><a class="reg" href="#lab">Run</a></div>
   <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="drawer"><i></i><i></i><i></i></button>
  </div>
 </header>
 <div class="drawer" id="drawer" aria-hidden="true">
- <a href="#top">Home</a><a href="#destinations">Destinations</a><a href="#packages">Packages</a><a href="#about">About Us</a>
- <div class="d-auth"><a href="#">Login</a><a class="on" href="#">Register</a></div>
+ <a href="#top">Lab</a><a href="#destinations">Problems</a><a href="#packages">Steps</a><a href="#lab">Trace</a>
+ <div class="d-auth"><a href="#about">AL102</a><a class="on" href="#lab">Run</a></div>
 </div>
 
 <main>
@@ -308,15 +325,14 @@ footer{position:relative;background:linear-gradient(#14425b,#0f374e);color:#fff;
 {{HERO_ART}}
   </div>
   <div class="hero-content container">
-   <h1 class="h" data-hero>Inspiring <span class="sw" style="--l:-32%;--r:6%">Explorations</span> and<br> Endless Possibilities</h1>
-   <p class="lead" data-hero>Discover a world of quick, easy, and exciting travel experiences with SnapTrips,<br> where your wanderlust can be transformed into memorable journeys.</p>
+   <h1 class="h" data-hero>Walk a <span class="sw" style="--l:-32%;--r:6%">string</span> through<br>finite acceptors</h1>
+   <p class="lead" data-hero>AL102 lab: pick a DFA or NFA from class slides, type a string, and watch each step.<br>Travel art stays — the automata are the assignment.</p>
   </div>
  </div>
- <form class="search" onsubmit="return false" data-hero aria-label="Plan your trip">
-  <div class="field"><span class="ic"><svg width="16" height="18" viewBox="0 0 16 18"><path d="M8 17s6-5.5 6-10A6 6 0 0 0 2 7c0 4.5 6 10 6 10z" fill="#0d2230"/><circle cx="8" cy="7" r="2.3" fill="#fff"/></svg></span><div><small>Destinations</small><b>Kintamani</b></div><svg class="chev" width="14" height="8" viewBox="0 0 14 8"><path d="M1 1l6 6 6-6" stroke="#0d2230" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>
-  <div class="field"><span class="ic"><svg width="16" height="16" viewBox="0 0 16 16"><rect x="1" y="2.5" width="14" height="12.5" rx="2.5" fill="#0d2230"/><path d="M4.5 1v3M11.5 1v3" stroke="#0d2230" stroke-width="1.8" stroke-linecap="round"/><rect x="4" y="8" width="3" height="3" rx=".6" fill="#fff"/></svg></span><div><small>Date</small><b>Aug 17, 2023</b></div><svg class="chev" width="14" height="8" viewBox="0 0 14 8"><path d="M1 1l6 6 6-6" stroke="#0d2230" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>
-  <div class="field"><span class="ic"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="4.5" r="3.5" fill="#0d2230"/><path d="M1.5 15.5c0-4 3-6 6.5-6s6.5 2 6.5 6z" fill="#0d2230"/></svg></span><div><small>Many of People</small><b>Adult 2</b></div><svg class="chev" width="14" height="8" viewBox="0 0 14 8"><path d="M1 1l6 6 6-6" stroke="#0d2230" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></div>
-  <button class="book" type="submit">Book your trip<i><svg width="18" height="12" viewBox="0 0 18 12"><path d="M1 6h15M11 1l5 5-5 5" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></i></button>
+ <form class="search" onsubmit="return false" data-hero aria-label="Run automaton">
+  <div class="field lab-field" style="flex:1.2"><span class="ic"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="#0d2230" stroke-width="1.4" fill="none"/><text x="8" y="11" text-anchor="middle" font-size="8" fill="#0d2230">M</text></svg></span><div><small>Machine</small><select id="machine-select" class="lab-inp" aria-label="Machine"></select></div></div>
+  <div class="field lab-field" style="flex:1"><span class="ic"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 8h12M10 4l4 4-4 4" stroke="#0d2230" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg></span><div><small>Input string</small><input id="string-input" class="lab-inp" type="text" autocomplete="off" spellcheck="false" placeholder="1010" aria-label="Input string"></div></div>
+  <button class="book" type="button" id="run-hero">Run<i><svg width="18" height="12" viewBox="0 0 18 12"><path d="M1 6h15M11 1l5 5-5 5" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></i></button>
  </form>
 </section>
 
@@ -326,9 +342,9 @@ footer{position:relative;background:linear-gradient(#14425b,#0f374e);color:#fff;
  <img class="plants deco-sway" src="svg/plant_cluster.svg" alt="" aria-hidden="true">
  <img class="plant-s deco-sway" src="svg/plant_small.svg" alt="" aria-hidden="true">
  <div class="container">
-  <h2 class="h" data-reveal>Explore <span class="sw" style="--l:-17%;--r:-6%">Our Most</span><br>Coveted SnapTrip<br>Destinations</h2>
-  <p class="sub" data-reveal>From Exotic Escapes to Hidden Gems, Discover Where Adventure Awaits.</p>
-  <div data-reveal><a class="btn-o" href="#packages"><svg width="22" height="20" viewBox="0 0 22 20" fill="none" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"><path d="M2 8h4l9-5v14l-9-5H2z"/><path d="M6 12l2 6h3l-2-6M18 7c1.5 1 1.5 5 0 6M20 4.5c3 2 3 9 0 11"/></svg>Let’s Start your Trip</a></div>
+  <h2 class="h" data-reveal>Slide <span class="sw" style="--l:-17%;--r:-6%">problems</span><br>from Week 7<br>and 10</h2>
+  <p class="sub" data-reveal>Same card layout — labels are languages from the PDFs, not destinations.</p>
+  <div data-reveal><a class="btn-o" href="#lab"><svg width="22" height="20" viewBox="0 0 22 20" fill="none" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"><path d="M2 8h4l9-5v14l-9-5H2z"/><path d="M6 12l2 6h3l-2-6M18 7c1.5 1 1.5 5 0 6M20 4.5c3 2 3 9 0 11"/></svg>Open trace lab</a></div>
   <div class="cards" id="cards">{{CARDS}}</div>
   <div class="dest-hint" aria-hidden="true"><i></i>Swipe to explore</div>
  </div>
@@ -337,14 +353,14 @@ footer{position:relative;background:linear-gradient(#14425b,#0f374e);color:#fff;
 <section class="why" id="about">
  <div class="container grid">
   <div>
-   <h2 class="h" data-reveal>Why<br><span class="sw" style="--l:6%;--r:-2%;--b:-.02em">SnapTrips</span>?</h2>
-   <p class="t" data-reveal>At SnapTrips, we believe in making travel accessible and exciting. Our unique approach to planning and experiencing trips ensures that you have a stress-free journey from start to finish.</p>
-   <div data-reveal><a class="btn-o" href="#packages">Discover more</a></div>
+   <h2 class="h" data-reveal>Why<br><span class="sw" style="--l:6%;--r:-2%;--b:-.02em">DFA &amp; NFA</span>?</h2>
+   <p class="t" data-reveal>Both accept regular languages. A DFA has one next state. An NFA may branch — accept if any path ends in F.</p>
+   <div data-reveal><a class="btn-o" href="#packages">See the 3 steps</a></div>
   </div>
   <div class="feats">
-   <div class="feat" data-reveal="right"><div class="num">01</div><div class="tx"><h4>Seamless Spontaneity</h4><p>Experience the freedom of planning an adventure at a moment’s notice. SnapTrips specializes in crafting hassle-free getaways that allow you to embrace spontaneity.</p></div></div>
-   <div class="feat" data-reveal="right"><div class="num">02</div><div class="tx"><h4>Curated Excellence</h4><p>With SnapTrips, every aspect of your journey is carefully curated. From handpicked accommodations that cater to your comfort.</p></div></div>
-   <div class="feat" data-reveal="right"><div class="num">03</div><div class="tx"><h4>Diverse Destinations</h4><p>Explore a world of diverse destinations with SnapTrips. Whether you’re yearning for a tropical paradise, a cultural immersion, making sure there’s something for everyone.</p></div></div>
+   <div class="feat" data-reveal="right"><div class="num">01</div><div class="tx"><h4>Deterministic</h4><p>One symbol, one move. Easy to trace — what Week 7 calls a DFA.</p></div></div>
+   <div class="feat" data-reveal="right"><div class="num">02</div><div class="tx"><h4>Nondeterministic</h4><p>Zero, one, or many moves. Accept if some branch reaches an accepting state.</p></div></div>
+   <div class="feat" data-reveal="right"><div class="num">03</div><div class="tx"><h4>Same power</h4><p>Every NFA has an equivalent DFA. This lab shows the walk, not the conversion proof.</p></div></div>
   </div>
  </div>
  <div class="scene">
@@ -355,19 +371,51 @@ footer{position:relative;background:linear-gradient(#14425b,#0f374e);color:#fff;
 
 <section class="pricing" id="packages">
  <div class="container">
-  <h2 class="h" data-reveal>Discover <span class="sw" style="--l:-2%;--r:-2%">Your Perfect</span><br>Journey</h2>
-  <p class="lead-c" data-reveal>From Thrilling Expeditions to Cultural Escapades, Find Your Ideal Vacation.</p>
+  <h2 class="h" data-reveal>Three <span class="sw" style="--l:-2%;--r:-2%">steps</span><br>per run</h2>
+  <p class="lead-c" data-reveal>Pick machine → type string → scrub the trace. Middle card is the featured path.</p>
   <div class="plans" id="plans">{{PLANS}}</div>
+ </div>
+</section>
+
+<section class="lab" id="lab">
+ <div class="container">
+  <h2 class="h" data-reveal>Trace <span class="sw" style="--l:-8%;--r:8%">lab</span></h2>
+  <p class="lead-c" data-reveal id="machine-note">Run from the hero or here. Table and diagram update with the machine.</p>
+  <div class="lab-card" data-reveal>
+   <p class="lab-verdict" id="lab-verdict">—</p>
+   <p class="muted" id="lab-reason">Waiting for a run.</p>
+   <div class="lab-controls">
+    <button type="button" id="run-lab">Run again</button>
+    <button type="button" id="step-prev" aria-label="Previous step">Back</button>
+    <button type="button" id="step-next" aria-label="Next step">Next</button>
+    <input type="range" id="step-range" min="0" max="0" value="0" aria-label="Step slider">
+    <span class="muted" id="step-label">Step 0 / 0</span>
+   </div>
+  </div>
+  <div class="lab-grid">
+   <div class="lab-card" data-reveal>
+    <h3 class="h" style="font-size:22px;margin:0 0 12px">Transition table</h3>
+    <div id="transition-table"></div>
+   </div>
+   <div class="lab-card" data-reveal>
+    <h3 class="h" style="font-size:22px;margin:0 0 12px">States (active step)</h3>
+    <svg id="state-diagram" role="img" aria-label="State diagram"></svg>
+   </div>
+  </div>
+  <div class="lab-card" data-reveal style="margin-top:20px">
+   <h3 class="h" style="font-size:22px;margin:0 0 12px">Step trace</h3>
+   <table class="trace"><thead><tr><th>Step</th><th>Read</th><th>State(s)</th><th>Note</th></tr></thead><tbody id="trace-body"></tbody></table>
+  </div>
  </div>
 </section>
 
 <section class="testi">
  <div class="container">
-  <h2 class="h" data-reveal>Stories <span class="sw" style="--l:-22%;--r:28%">of SnapTrips</span><br>Explorers</h2>
-  <p class="lead-c" data-reveal style="max-width:470px">Don’t just take our word for it. Hear directly from travelers who have embarked on unforgettable SnapTrips.</p>
+  <h2 class="h" data-reveal>Example <span class="sw" style="--l:-22%;--r:28%">strings</span><br>to try</h2>
+  <p class="lead-c" data-reveal style="max-width:470px">Quick checks from the slides. Paste into the hero after you pick the matching machine.</p>
   <div class="tcards">
-   <article class="tcard" data-reveal><img class="av" src="svg/avatar1.svg" alt=""><div class="nm">Bambang Karlos</div><div class="pl">Jakarta, Indonesia</div><q>As a solo traveler, safety and excitement are crucial. SnapTrips delivered both impeccably. I joined the Adventure Explorer Package and experienced activities that fueled my adrenaline and left me in awe. Thank you, SnapTrips!</q><div class="dt">– 16 Aug, 2023</div><img class="lf" src="svg/leaf_corner.svg" alt=""></article>
-   <article class="tcard" data-reveal><img class="av" src="svg/avatar2.svg" alt=""><div class="nm">Sarah Johnson</div><div class="pl">New York, USA</div><q>SnapTrips turned my spontaneous getaway dreams into reality. From breathtaking landscapes to unexpected encounters, every moment was a highlight. I’m already planning my next SnapTrip!</q><div class="dt">– 21 Aug, 2023</div><img class="lf" src="svg/leaf_corner.svg" alt=""></article>
+   <article class="tcard" data-reveal><img class="av" src="svg/avatar1.svg" alt=""><div class="nm">Ends with 10</div><div class="pl">DFA · Σ={0,1}</div><q>Input <strong>1010</strong> → accept. Input <strong>11</strong> → reject. Watch q₀→q₁→q₂ on the last two symbols.</q><div class="dt">Week 7 · P2</div><img class="lf" src="svg/leaf_corner.svg" alt=""></article>
+   <article class="tcard" data-reveal><img class="av" src="svg/avatar2.svg" alt=""><div class="nm">Contains bab</div><div class="pl">DFA · Σ={a,b}</div><q>Input <strong>abab</strong> → accept once substring <strong>bab</strong> appears. <strong>bbb</strong> → reject.</q><div class="dt">Week 7 · P3</div><img class="lf" src="svg/leaf_corner.svg" alt=""></article>
   </div>
   <div class="dots" aria-hidden="true"><i></i><i class="on"></i><i></i></div>
  </div>
@@ -381,15 +429,15 @@ footer{position:relative;background:linear-gradient(#14425b,#0f374e);color:#fff;
  <div class="container">
   <div class="fbody">
    <div data-reveal>
-    <a class="flogo" href="#top"><img src="svg/logo_white.svg" width="42" height="42" alt="">SnapTrips</a>
-    <p>Welcome to SnapTrips, your go-to platform for hassle-free and spontaneous travel journeys. We specialize in offering you quick and exciting getaways to unique destinations around the world.</p>
-    <a class="fcontact" href="#">Contact Us<svg width="30" height="14" viewBox="0 0 30 14"><path d="M1 7h27M22 1l6 6-6 6" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-    <a class="fmail" href="mailto:info@snaptrips.com">Info@snaptrips.com</a>
+    <a class="flogo" href="#top"><img src="svg/logo_white.svg" width="42" height="42" alt="">StateStream</a>
+    <p>AL102 automata lab — finite acceptors with step traces. Visual skin from the SnapTrips vector demo; content is for Automata Theory class.</p>
+    <a class="fcontact" href="#lab">Open lab<svg width="30" height="14" viewBox="0 0 30 14"><path d="M1 7h27M22 1l6 6-6 6" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <a class="fmail" href="#about">AL102 · Formal Language</a>
    </div>
-   <nav class="flinks" aria-label="Footer" data-reveal><a class="on" href="#about">About Us</a><a href="#">Services</a><a href="#">Contact</a><a href="#destinations">Destinations</a><a href="#packages">Packages</a></nav>
+   <nav class="flinks" aria-label="Footer" data-reveal><a class="on" href="#about">Theory</a><a href="#lab">Trace</a><a href="#destinations">Problems</a><a href="#packages">Steps</a><a href="#top">Hero</a></nav>
   </div>
   <div class="fhr"></div>
-  <div class="copy">© SnapTrips Adventures 2023. All rights reserved.</div>
+  <div class="copy">© StateStream · AL102 lab demo.</div>
  </div>
 </footer>
 
@@ -397,4 +445,5 @@ footer{position:relative;background:linear-gradient(#14425b,#0f374e);color:#fff;
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
 <script src="https://unpkg.com/lenis@1.3.4/dist/lenis.min.js" defer></script>
 <script src="main.js" defer></script>
+<script type="module" src="automata/automata_app.js"></script>
 </body></html>
