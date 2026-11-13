@@ -59,8 +59,9 @@ def why_scene():
     def bar(x0,y0,x1,y1,w): return capsule(x0,y0,x1,y1,w,F)
     s.add(bar(118,148,282,380,13))
     s.add(bar(282,268,402,280,10))
-    s.p('M250 292C300 300 360 298 404 286L410 304C380 324 300 330 262 318Z','#ec7a3a')
-    s.p('M250 292C300 300 360 298 404 286L406 294C360 306 300 308 256 302Z','#d9602a')
+    s.p('M248 298C298 306 358 304 410 290L408 310C378 328 298 334 260 322Z','#ec7a3a',opacity=.95)
+    s.p('M248 298C298 306 358 304 410 290L412 298C364 312 298 314 254 306Z','#d9602a',opacity=.9)
+    s.p('M252 308C312 318 370 312 400 302L398 318C340 330 290 326 258 318Z','#f0b896',opacity=.45)
     w='<g>'
     # far leg (bent, lower) + sandal
     w+='<path d="M372 272L400 328L436 346L438 360L404 362L380 334L352 286Z" fill="#e8a27a"/>'
@@ -112,8 +113,12 @@ def why_scene():
     g+=f'<path d="M612 298C628 294 646 302 654 318" fill="none" stroke="{HL}" stroke-width="3" stroke-linecap="round" opacity=".6"/>'
     # near front leg (standing)
     g+=f'<path d="M574 278C582 278 586 284 586 292L589 348C589 352 594 353 597 355C597 358 588 358 581 358C576 358 575 354 575 349L571 292C570 284 570 279 574 278Z" fill="{D}"/>'
-    # lifted paw (folded, gentle wave)
-    g+='<g transform="translate(2 -9)">'+sway(f'<path d="M556 276C562 274 568 280 567 287L560 314C558 320 554 324 548 326L536 330C530 331 528 325 532 322L546 314L550 290C551 283 551 277 556 276Z" fill="{D}"/>',560,280,7,1.7,-.4)+'</g>'
+    # lifted paw (waving toward the woman)
+    g+='<g transform="translate(0 -6)">'+sway(
+        f'<path d="M554 272C560 268 566 272 568 280L562 302C560 310 552 316 542 318L534 320C528 318 528 312 534 308L546 300L548 278C548 272 550 270 554 272Z" fill="{D}"/>'
+        f'<path d="M538 316L532 324L526 322L530 312Z" fill="{HL}"/>'
+        f'<path d="M544 318L540 326L534 324L538 314Z" fill="{HL}"/>'
+        ,558,278,7,1.7,-.4)+'</g>'
     # sheen
     g+=f'<path d="M512 188C522 182 536 182 544 189C534 189 523 191 512 196Z" fill="{HL}"/>'
     g+=f'<path d="M574 236C596 250 616 266 634 284C616 272 596 258 578 246Z" fill="{HL}" opacity=".6"/>'
@@ -125,9 +130,10 @@ def why_scene():
     g+='<path d="M505 191C509 188 514 188 517 190" fill="none" stroke="#1f2d36" stroke-width="1.6" stroke-linecap="round"/>'
     g+='<path d="M488 214C494 218 501 217 507 212" fill="none" stroke="#18232b" stroke-width="1.8" stroke-linecap="round"/>'
     g+='<path d="M494 216C495 223 500 226 504 220C503 217 499 216 494 216Z" fill="#f07a8a"/>'
-    # collar + tag
-    g+='<path d="M541 222C551 230 564 232 574 226L579 236C567 244 550 242 537 233Z" fill="#e2445a"/>'
-    g+='<circle cx="560" cy="241" r="4" fill="#f6c84a"/><circle cx="560" cy="241" r="1.3" fill="#d9a62a"/>'
+    # collar + tag (sits on neck, not back)
+    g+=f'<path d="M528 248C538 256 552 258 564 252L568 262C554 270 536 268 524 258Z" fill="#e2445a"/>'
+    g+=f'<path d="M532 252C544 258 556 258 562 254" fill="none" stroke="{HL}" stroke-width="2" stroke-linecap="round" opacity=".5"/>'
+    g+='<circle cx="552" cy="264" r="4.2" fill="#f6c84a"/><circle cx="552" cy="264" r="1.4" fill="#d9a62a"/>'
     g+='</g>'
     s.add(g)
     for x,y,k in [(338,396,1.3),(397,440,1.2),(485,430,1.1),(1180,430,0.9)]: s.add(tuft(x,y,k,'#d5e24f','#b6d443'))
@@ -350,9 +356,9 @@ def leaf_corner():
     return s.out(OUT+'leaf_corner.svg')
 def avatar(n):
     s=S(80,80)
-    s.add('<circle cx="40" cy="40" r="40" fill="#eef7ff"/>')
+    s.add('<circle cx="40" cy="40" r="40" fill="#dce8f5"/>')
     if n==1:
-        s.add('<path d="M14 80C14 62 26 54 40 54S66 62 66 80Z" fill="#f79a5a"/><path d="M58 56C66 52 74 56 72 66 70 72 62 72 58 70Z" fill="#f27a3a"/>'
+        s.add('<path d="M14 80C14 62 26 54 40 54S66 62 66 80Z" fill="#1a4d8c"/><path d="M58 56C66 52 74 56 72 66 70 72 62 72 58 70Z" fill="#153d70"/>'
               '<path d="M34 46h12v10c0 4-12 4-12 0z" fill="#f0b48c"/><ellipse cx="40" cy="36" rx="13" ry="15" fill="#f6c4a0"/>'
               '<path d="M26 34C24 20 34 14 42 16 52 16 56 24 54 34 50 26 44 24 38 28 34 24 30 26 26 34Z" fill="#1e2228"/>'
               '<circle cx="35" cy="37" r="1.6" fill="#1e2228"/><circle cx="45" cy="37" r="1.6" fill="#1e2228"/><path d="M37 44q3 2 6 0" stroke="#c46a50" stroke-width="1.4" fill="none" stroke-linecap="round"/>')
