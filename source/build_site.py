@@ -32,15 +32,15 @@ WAVE='<svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r=
 PIN='<svg width="14" height="16" viewBox="0 0 14 16"><path d="M7 15s5.5-5 5.5-9A5.5 5.5 0 0 0 1.5 6c0 4 5.5 9 5.5 9z" fill="#22c1c3"/><circle cx="7" cy="6" r="2" fill="#fff"/></svg>'
 def cards():
     C=[
-        ('card1','Suffix 01',5,'DFA','101'),
-        ('card2','Contains aba',4,'DFA','aba'),
-        ('card3','a then b*',4,'DFA','abbb'),
+        ('card1','Suffix 01','DFA','Σ={0,1}','try 01'),
+        ('card2','Contains aba','DFA','Σ={a,b}','try aba'),
+        ('card3','a then b*','DFA','Σ={a,b}','try abbb'),
     ]
     return ''.join(
         f'<article class="card" data-card><div class="img"><img src="svg/{c}.svg" alt="{n} illustration" width="398" height="330" loading="lazy"></div>'
-        f'<div class="body"><h3>{n}</h3><div class="rate"><span class="stars" aria-label="{st} stars">{STAR*st}</span><span class="dot"></span>{WAVE}'
-        f'<span>{r}</span></div><div class="loc">{PIN}AL102 · Week 7–10</div><div class="price">{p}<span> / problem</span></div></div></article>'
-        for c,n,st,r,p in C
+        f'<div class="body"><h3>{n}</h3><div class="meta"><span class="pill">{k}</span><span>{sig}</span></div>'
+        f'<p class="try">{hint}</p></div></article>'
+        for c,n,k,sig,hint in C
     )
 def plans():
     chk='<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8" fill="currentColor"/><path d="M5.2 9.2l2.5 2.4 5-5" stroke="var(--bg)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'
