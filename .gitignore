@@ -1,2 +1,4 @@
 graphify-out/
 brainstorms/
+__pycache__/
+*.pyc
