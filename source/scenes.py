@@ -2,6 +2,7 @@ from lib import *
 from comp import *
 from hero import house
 from anim import sway, drift, bird as abird, smoke
+from figures import deck_woman, sitting_dog
 import math
 import os as _os
 _HERE=_os.path.dirname(_os.path.abspath(__file__))
@@ -54,88 +55,8 @@ def why_scene():
     s.add(sway(budstem([(80,330),(90,220),(110,110),(130,10),(140,-40)],[(0.8,-160,'p',40),(1.3,-20,'o',38),(1.9,-160,'p',38),(2.3,-20,'o',34),(2.9,-150,'p',34),(3.3,-40,'p',30),(3.8,-100,'o',28)],2),80,330,1.8,5,-2))
     s.add(sway(fan2(s,80,404,96,17,'#e6dc58','#2f8a3a',w=0.15),80,404,1.4,4.6,-.6))
     s.add(sway(grassfan(40,410,9,80,-170,-110,5,['#2e8a46','#46a552'],0.1,0.2,21),40,410,2,3.8,-1.4))
-    # ---- woman in deck chair (svg = ref crop + (100,40)) ----
-    F='#3a4452'
-    def bar(x0,y0,x1,y1,w): return capsule(x0,y0,x1,y1,w,F)
-    s.add(bar(118,148,282,380,13))
-    s.add(bar(282,268,402,280,10))
-    s.p('M248 298C298 306 358 304 410 290L408 310C378 328 298 334 260 322Z','#ec7a3a',opacity=.95)
-    s.p('M248 298C298 306 358 304 410 290L412 298C364 312 298 314 254 306Z','#d9602a',opacity=.9)
-    s.p('M252 308C312 318 370 312 400 302L398 318C340 330 290 326 258 318Z','#f0b896',opacity=.45)
-    w='<g>'
-    # far leg (bent, lower) + sandal
-    w+='<path d="M372 272L400 328L436 346L438 360L404 362L380 334L352 286Z" fill="#e8a27a"/>'
-    w+='<path d="M398 352C410 340 432 340 444 348L446 366L398 368Z" fill="#f6e3b4"/><path d="M398 364L448 362L448 372L398 372Z" fill="#3a3f4a"/>'
-    # pants
-    w+='<path d="M228 248C250 216 290 196 340 186C372 180 400 186 412 200L452 250L438 262C420 244 404 232 392 228L388 236C360 254 320 268 280 276C252 280 228 272 228 248Z" fill="#2f5db4"/>'
-    w+='<path d="M340 186C372 180 400 186 412 200L452 250L438 262C420 244 404 232 392 228C384 214 364 196 340 186Z" fill="#244c9c"/>'
-    w+='<path d="M264 246C300 236 340 224 372 214" fill="none" stroke="#244c9c" stroke-width="4" stroke-linecap="round"/>'
-    w+='<path d="M300 268C330 258 356 250 380 238" fill="none" stroke="#3f6fc8" stroke-width="3" stroke-linecap="round"/>'
-    # near lower leg + sandal
-    w+='<path d="M424 252L452 250L500 312L536 324L534 338L494 336L470 314Z" fill="#f2b48c"/>'
-    w+='<path d="M494 326C506 314 528 314 540 322L542 340L494 342Z" fill="#f6e3b4"/><path d="M490 338L544 336L544 346L490 346Z" fill="#3a3f4a"/>'
-    # torso shirt
-    w+='<path d="M170 168C188 152 226 150 252 160C276 170 292 196 298 222L266 250C246 258 220 258 204 250C188 232 176 200 170 168Z" fill="#ec5a68"/>'
-    w+='<path d="M170 168C180 162 190 160 198 162C196 196 204 228 222 256C214 256 208 254 204 250C188 232 176 200 170 168Z" fill="#d6455a"/>'
-    # raised arm
-    w+='<path d="M262 170L300 150L344 122L372 112L378 126L350 142L310 176L282 196Z" fill="#f2b48c"/>'
-    w+='<path d="M250 158C264 156 280 162 292 172L276 196C266 186 254 178 244 176Z" fill="#ec5a68"/>'
-    w+='<path d="M366 108C374 104 384 106 388 112L380 122L370 122Z" fill="#e8a27a"/><circle cx="380" cy="122" r="7" fill="#e85a6a"/>'
-    # glass arm
-    w+='<path d="M196 214C212 232 240 236 274 228L276 244C242 254 206 250 188 232Z" fill="#f2b48c"/>'
-    w+='<path d="M276 196H300L296 234C296 238 280 238 280 234Z" fill="#d8f4ff" stroke="#9bd2ea" stroke-width="2"/><path d="M280 214H296L295 232H281Z" fill="#a8e2f6"/>'
-    w+='<path d="M268 226C276 222 284 224 286 232L276 238Z" fill="#e8a27a"/>'
-    # head, hair, hat
-    w+='<path d="M196 128C194 108 206 96 224 96L232 140C226 152 214 166 208 176L198 182C186 166 194 146 196 128Z" fill="#2a2f3a"/>'
-    w+='<path d="M210 146L230 140L234 166L214 170Z" fill="#e8a27a"/>'
-    w+='<path d="M210 112C216 100 236 98 242 112C246 122 244 140 236 150C228 156 218 152 212 144Z" fill="#f2b48c"/>'
-    w+='<path d="M196 118C212 116 232 108 244 100" fill="none" stroke="#2a2f3a" stroke-width="7" stroke-linecap="round"/>'
-    w+='<ellipse cx="214" cy="106" rx="72" ry="22" fill="#f6cf4a" transform="rotate(-12 214 106)"/>'
-    w+='<path d="M180 108C178 84 196 72 218 74C238 76 250 88 250 98Z" fill="#f8d95a"/>'
-    w+='<path d="M182 106C204 102 230 96 250 96L250 104C228 104 204 110 182 114Z" fill="#ec5a68"/>'
-    w+='<ellipse cx="214" cy="106" rx="72" ry="22" fill="none" stroke="#e7b93a" stroke-width="2" transform="rotate(-12 214 106)"/>'
-    w+='</g>'
-    s.add(w)
-    s.add(bar(267,350,380,281,9)); s.add(bar(383,287,424,356,10))
-    # ---- dog: lean sitting hound facing the woman, one paw lifted (hand-drawn) ----
-    D='#334a59'; D2='#243541'; HL='#46606f'
-    g='<g class="dog">'
-    g+='<ellipse cx="612" cy="358" rx="78" ry="6" fill="#3f7a26" opacity=".35"/>'
-    g+=sway(f'<path d="M660 346C686 344 700 326 704 298C705 290 701 286 697 290C694 316 684 332 658 337Z" fill="{D}"/>',662,342,8,1.05,0)
-    # far front leg (behind, darker)
-    g+=f'<path d="M566 286L571 350C571 354 575 355 577 356C577 358 570 358 565 358C561 358 560 355 560 350L556 290Z" fill="{D2}"/>'
-    # body, neck, head
-    g+=(f'<path d="M482 203C486 198 496 196 506 194C510 186 516 182 526 182C540 182 549 191 552 203C557 214 566 222 578 230C600 244 622 262 640 280C656 296 666 314 668 334'
-        f'C669 348 664 356 656 357L600 357C594 340 588 318 584 300C578 286 570 274 560 264C548 252 534 240 520 233C510 229 500 225 492 222C484 218 479 209 482 203Z" fill="{D}"/>')
-    # haunch + hind foot
-    g+=f'<path d="M594 326C592 300 608 284 630 286C652 288 666 308 664 332C662 350 650 358 632 358L606 358C598 350 595 340 594 326Z" fill="#2e4352"/>'
-    g+=f'<path d="M590 357C589 350 596 346 606 347L638 350C645 352 646 358 640 358Z" fill="{D}"/>'
-    g+=f'<path d="M612 298C628 294 646 302 654 318" fill="none" stroke="{HL}" stroke-width="3" stroke-linecap="round" opacity=".6"/>'
-    # near front leg (standing)
-    g+=f'<path d="M574 278C582 278 586 284 586 292L589 348C589 352 594 353 597 355C597 358 588 358 581 358C576 358 575 354 575 349L571 292C570 284 570 279 574 278Z" fill="{D}"/>'
-    # lifted paw (waving toward the woman)
-    g+='<g transform="translate(0 -6)">'+sway(
-        f'<path d="M554 272C560 268 566 272 568 280L562 302C560 310 552 316 542 318L534 320C528 318 528 312 534 308L546 300L548 278C548 272 550 270 554 272Z" fill="{D}"/>'
-        f'<path d="M538 316L532 324L526 322L530 312Z" fill="{HL}"/>'
-        f'<path d="M544 318L540 326L534 324L538 314Z" fill="{HL}"/>'
-        ,558,278,7,1.7,-.4)+'</g>'
-    # sheen
-    g+=f'<path d="M512 188C522 182 536 182 544 189C534 189 523 191 512 196Z" fill="{HL}"/>'
-    g+=f'<path d="M574 236C596 250 616 266 634 284C616 272 596 258 578 246Z" fill="{HL}" opacity=".6"/>'
-    # ear
-    g+=sway(f'<path d="M528 186C541 183 550 192 550 205C550 220 546 233 538 240C532 237 529 227 529 215C527 205 524 194 528 186Z" fill="{D2}"/>',531,189,5,2.6,-1)
-    # face
-    g+='<path d="M478 201C482 197 489 198 490 203C489 208 483 209 479 207C477 206 476 203 478 201Z" fill="#11161c"/>'
-    g+='<circle cx="511" cy="199" r="3.3" fill="#11161c"/><circle cx="510" cy="197.8" r="1.05" fill="#fff"/>'
-    g+='<path d="M505 191C509 188 514 188 517 190" fill="none" stroke="#1f2d36" stroke-width="1.6" stroke-linecap="round"/>'
-    g+='<path d="M488 214C494 218 501 217 507 212" fill="none" stroke="#18232b" stroke-width="1.8" stroke-linecap="round"/>'
-    g+='<path d="M494 216C495 223 500 226 504 220C503 217 499 216 494 216Z" fill="#f07a8a"/>'
-    # collar + tag (sits on neck, not back)
-    g+=f'<path d="M528 248C538 256 552 258 564 252L568 262C554 270 536 268 524 258Z" fill="#e2445a"/>'
-    g+=f'<path d="M532 252C544 258 556 258 562 254" fill="none" stroke="{HL}" stroke-width="2" stroke-linecap="round" opacity=".5"/>'
-    g+='<circle cx="552" cy="264" r="4.2" fill="#f6c84a"/><circle cx="552" cy="264" r="1.4" fill="#d9a62a"/>'
-    g+='</g>'
-    s.add(g)
+    s.add(deck_woman())
+    s.add(sitting_dog())
     for x,y,k in [(338,396,1.3),(397,440,1.2),(485,430,1.1),(1180,430,0.9)]: s.add(tuft(x,y,k,'#d5e24f','#b6d443'))
     s.add(sway(grassfan(830,470,13,120,-170,-10,8,['#1f8a5a','#2fa26a','#47b876','#178050'],0.15,0.3,31),830,470,1.6,4.4,-.9))
     s.add(sway(fan2(s,790,474,46,13,'#eee05c','#6fb13a'),790,474,1.5,5.2,-2))
@@ -356,9 +277,9 @@ def leaf_corner():
     return s.out(OUT+'leaf_corner.svg')
 def avatar(n):
     s=S(80,80)
-    s.add('<circle cx="40" cy="40" r="40" fill="#dce8f5"/>')
+    s.add('<circle cx="40" cy="40" r="40" fill="#eef7ff"/>')
     if n==1:
-        s.add('<path d="M14 80C14 62 26 54 40 54S66 62 66 80Z" fill="#1a4d8c"/><path d="M58 56C66 52 74 56 72 66 70 72 62 72 58 70Z" fill="#153d70"/>'
+        s.add('<path d="M14 80C14 62 26 54 40 54S66 62 66 80Z" fill="#f79a5a"/><path d="M58 56C66 52 74 56 72 66 70 72 62 72 58 70Z" fill="#f27a3a"/>'
               '<path d="M34 46h12v10c0 4-12 4-12 0z" fill="#f0b48c"/><ellipse cx="40" cy="36" rx="13" ry="15" fill="#f6c4a0"/>'
               '<path d="M26 34C24 20 34 14 42 16 52 16 56 24 54 34 50 26 44 24 38 28 34 24 30 26 26 34Z" fill="#1e2228"/>'
               '<circle cx="35" cy="37" r="1.6" fill="#1e2228"/><circle cx="45" cy="37" r="1.6" fill="#1e2228"/><path d="M37 44q3 2 6 0" stroke="#c46a50" stroke-width="1.4" fill="none" stroke-linecap="round"/>')

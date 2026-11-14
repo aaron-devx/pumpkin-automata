@@ -1,6 +1,7 @@
 from lib import *
 from comp import *
 import math
+from figures import deck_woman, sitting_dog
 def house(s,ox=0,oy=0,k=1.0,door=False):
     """blue glass house, front gable left. local coords: origin at left-bottom of front face"""
     T=lambda x,y:(ox+x*k,oy+y*k)
@@ -118,25 +119,9 @@ def build_layers():
     s.add(fan2(s,604,716,32,13,'#e6e05a','#6ea032'))
     s.add(fan2(s,962,714,30,13,'#e6e05a','#6ea032'))
     for x,y in [(650,738),(690,746),(860,744),(920,738),(1000,750),(560,778)]: s.add(tuft(x,y,0.9,'#d5e24f','#a8cc3e'))
-    s.add('<g class="isl-pet" fill="#2b3a44">'
-          '<ellipse cx="722" cy="752" rx="28" ry="5" fill="#2f6a2a" opacity=".4"/>'
-          '<path d="M688 746c10-22 28-32 46-28 6-10 16-14 26-10 10 4 14 14 10 24-4 16-18 26-36 26-12 0-22-6-28-14-4 4-10 6-16 4z"/>'
-          '<path d="M672 734c6-10 14-12 20-8l14 28c-6 4-14 4-22-2l-12-18z" fill="#243845"/>'
-          '<circle cx="702" cy="734" r="2.4" fill="#0e1418"/><circle cx="701.2" cy="733.2" r=".8" fill="#fff"/>'
-          '<path d="M696 742c3 2 8 2 11 0" stroke="#18232b" stroke-width="1.4" fill="none" stroke-linecap="round"/>'
-          '<path d="M714 750c12 0 20-4 24-12" stroke="#e2445a" stroke-width="3.2" stroke-linecap="round"/>'
-          '<circle cx="732" cy="748" r="3" fill="#f6c84a"/>'
-          '<g class="an-sway" style="transform-origin:678px 730px;--a:12deg;--d:.85s;--dl:0s">'
-          '<path d="M676 728c4-6 10-6 14-2l-6 14c-4-2-8-6-8-12z" fill="#334a59"/></g></g>')
-    s.add('<g class="isl-trav">'
-          '<path d="M758 752l34-36 5 4-30 32z" fill="#3a3f4a"/><path d="M772 740l20 12" stroke="#3a3f4a" stroke-width="3.2" stroke-linecap="round"/>'
-          '<path d="M766 736l26 8-4 4-26-6z" fill="#ef7a3a"/>'
-          '<path d="M778 726c5-7 12-9 18-6l3 11c-6 3-12 3-18-5z" fill="#e85a6a"/>'
-          '<path d="M754 744c8-5 18-7 28-4l-3 7c-9-1-15 1-20 4z" fill="#2f5fb0"/>'
-          '<ellipse cx="798" cy="720" rx="10" ry="11" fill="#f2b48c"/>'
-          '<path d="M788 714c5-7 16-8 22-2-6-1-12 0-18 2z" fill="#f6c84a"/>'
-          '<path d="M780 718c6-4 14-4 18 2" fill="none" stroke="#2a2f3a" stroke-width="2.5" stroke-linecap="round"/>'
-          '<path d="M752 750l8-3 2 4-8 2z" fill="#f0b48c"/></g>')
+    # same woman + dog as the why scene, scaled down onto the lawn (feet on y~744)
+    s.add(f'<g transform="translate(678 698.4) scale(.12)">{deck_woman()}</g>')
+    s.add(f'<g transform="translate(691 701) scale(.12)">{sitting_dog()}</g>')
     cut('island',.16,14)
     # low gulls over the water
     for i,(x,y,k,dur,ph,rev) in enumerate([(300,712,15,58,0,False),(375,690,8,64,0,False),(1094,708,12,52,0,True),(1252,808,24,46,0,True)]):
