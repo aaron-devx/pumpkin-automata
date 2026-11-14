@@ -1,41 +1,68 @@
 from lib import *
 from comp import *
-import math
+import math, itertools
 from figures import deck_woman, sitting_dog
+_HOUSE_IDS=itertools.count()
+WALL='#4a2c5e'; WALL_DK='#3a2150'; ROOF='#24163a'; TRIM='#6b3f86'; GLOW='#ffcf5a'; GLOW2='#ff9a2e'; STONE='#5a4a6e'
+def _scallops(x0,x1,y0,y1,step=8):
+    # rows of half-round shingles, offset every other row
+    d=''
+    for r,y in enumerate(range(y0,y1,step)):
+        x=x0-(step/2 if r%2 else 0)
+        d+=f'M{f(x)} {y}'+f'a{step/2} {step/2} 0 0 0 {step} 0'*int((x1-x)//step+1)
+    return d
 def house(s,ox=0,oy=0,k=1.0,door=False):
-    """original crooked haunted house, spires. local coords: origin at left-bottom of front face"""
-    T=lambda x,y:(ox+x*k,oy+y*k)
-    def P(pl): return poly([T(x,y) for x,y in pl])
-    def A(pl,c,op=1): return f'<path d="{P(pl)}" fill="{c}"'+(f' opacity="{op}"' if op!=1 else '')+'/>'
-    def win(cx,cy,w,h,c='#ffcf5a'):
-        # arched window with soft glow
-        g=f'<circle cx="{f(ox+cx*k)}" cy="{f(oy+(cy-h/2)*k)}" r="{f(h*.8*k)}" fill="#ff9a2e" opacity=".25"/>'
-        return g+A([(cx-w/2,cy),(cx-w/2,cy-h+w/2),(cx-w*.3,cy-h+w*.1),(cx,cy-h),(cx+w*.3,cy-h+w*.1),(cx+w/2,cy-h+w/2),(cx+w/2,cy)],c)
-    o=''
-    # leaning two-storey body
-    o+=A([(0,0),(232,0),(238,-92),(244,-168),(8,-172),(4,-90)],'#4a2c5e')
-    o+=A([(4,-90),(238,-92),(240,-102),(2,-100)],'#3a2150')
-    o+=A([(0,-8),(232,-8),(233,0),(0,0)],'#3a2150')
-    # left crooked spire tower (tip bent)
-    o+=A([(8,-150),(64,-150),(66,-180),(60,-172),(8,-172)],'#3a2150')
-    o+=A([(4,-170),(70,-170),(54,-214),(52,-244),(66,-268),(46,-252),(40,-214)],'#24163a')
-    # main roof gable + right spire (tip bent right)
-    o+=A([(66,-170),(130,-170),(112,-226),(98,-220)],'#24163a')
-    o+=A([(124,-168),(214,-168),(186,-222),(190,-250),(208,-262),(176,-250),(164,-222)],'#24163a')
-    o+=A([(4,-170),(244,-168),(244,-162),(4,-164)],'#6b3f86')
-    # bent chimney on right roof
-    o+=A([(206,-176),(224,-176),(222,-212),(230,-228),(220,-232),(210,-216),(208,-200)],'#3a2150')
-    o+=A([(214,-232),(230,-228),(232,-224),(214,-228)],'#6b3f86')
-    # windows: round attic, arched, small squares
-    o+=f'<circle cx="{f(ox+36*k)}" cy="{f(oy-200*k)}" r="{f(10*k)}" fill="#ffcf5a"/><circle cx="{f(ox+36*k)}" cy="{f(oy-200*k)}" r="{f(10*k)}" fill="none" stroke="#6b3f86" stroke-width="2.4"/>'
-    o+=win(150,-100,22,40)+win(205,-100,22,36)+win(40,-116,20,34,'#ff9a2e')
-    o+=A([(70,-130),(90,-130),(90,-112),(70,-112)],'#ffcf5a')+A([(79,-130),(81,-130),(81,-112),(79,-112)],'#3a2150')
-    o+=A([(176,-24),(192,-24),(192,-40),(176,-40)],'#ff9a2e')
-    # arched door + steps
-    o+=A([(88,-6),(88,-52),(94,-66),(108,-72),(122,-66),(128,-52),(128,-6)],'#ff9a2e')
-    o+=A([(92,-6),(92,-51),(97,-62),(108,-67),(119,-62),(124,-51),(124,-6)],'#3b2418')
-    o+=A([(82,6),(134,6),(134,0),(82,0)],'#6b3f86')+A([(76,12),(140,12),(140,6),(76,6)],'#3a2150')
-    return o
+    """original crooked haunted house: curled spires, scalloped shingles, cobble base. local coords: origin at left-bottom of front face"""
+    hid=f'hs{next(_HOUSE_IDS)}'
+    def A(d,c,**kw): return f'<path d="{d}" fill="{c}"'+''.join(f' {a.replace("_","-")}="{v}"' for a,v in kw.items())+'/>'
+    def L(d,c,w,op=1): return A(d,'none',stroke=c,stroke_width=w,stroke_linecap='round',opacity=op)
+    def shingled(name,d,box):
+        x0,x1,y0,y1=box
+        return A(d,ROOF)+f'<clipPath id="{hid}{name}"><path d="{d}"/></clipPath><g clip-path="url(#{hid}{name})">'+L(_scallops(x0,x1,y0,y1),'#3d2a5c',1.6,.9)+'</g>'
+    def win(cx,y,w,h,c=GLOW):
+        # pointed gothic window: glow, frame, mullion cross, crooked shutters
+        arch=f'M{cx-w/2} {y}V{y-h+w*.6}Q{cx-w/2} {y-h+w*.12} {cx} {y-h}Q{cx+w/2} {y-h+w*.12} {cx+w/2} {y-h+w*.6}V{y}Z'
+        g=f'<circle cx="{cx}" cy="{y-h/2}" r="{h*.6}" fill="{GLOW2}" opacity=".2"/>'
+        g+=A(f'M{cx-w/2-7} {y+1}l5 -{h*.7}h4l-3 {h*.7}Z','#2a1a40')+A(f'M{cx+w/2+2} {y}l4 -{h*.68}h5l-4 {h*.7}Z','#2a1a40')
+        return g+A(arch,c,stroke=ROOF,stroke_width=2.4)+L(f'M{cx} {y}V{y-h+3}M{cx-w/2} {y-h*.42}H{cx+w/2}',ROOF,1.8)
+    def curl(x,y,m=1):
+        # little curled hook on eave ends
+        return L(f'M{x} {y}c{-7*m} 0 {-10*m} -7 {-5*m} -9c{3*m} -1 {4*m} 3 {1*m} 4',TRIM,2.6)
+    body='M0 0L232 0L238 -92L244 -168L8 -172L4 -90Z'
+    o=f'<g transform="translate({f(ox)} {f(oy)}) scale({k})">'
+    # leaning two-storey body with board siding
+    o+=A(body,WALL)+f'<clipPath id="{hid}b"><path d="{body}"/></clipPath><g clip-path="url(#{hid}b)">'
+    o+=L(''.join(f'M{x} -4L{x+2} -170' for x in range(18,244,14)),WALL_DK,1.4,.55)
+    o+=A('M0 -40L240 -44L240 0L0 0Z',WALL_DK,opacity=.35)+'</g>'
+    # sagging floor band with curled ends
+    o+=A('M-6 -96C40 -90 190 -90 246 -98L246 -88C190 -82 40 -82 -6 -88Z',WALL_DK)+curl(-6,-92)+curl(246,-94,-1)
+    # cobblestone base
+    o+=A('M-6 -14H242V4H-6Z','#2c1f3a')
+    o+=''.join(f'<ellipse cx="{x+(6 if r else 0)}" cy="{-9+r*8}" rx="5.6" ry="3.4" fill="{STONE}" opacity="{.75+((x*7+r)%3)*.1:.2f}"/>' for r in (0,1) for x in range(-2,240,12))
+    # left tower: squat body + flared cone, tip curls right
+    o+=A('M6 -170H68L66 -198H10Z',WALL_DK)
+    o+=shingled('t','M-10 -192C10 -196 26 -214 32 -244C36 -262 46 -274 60 -272C70 -270 70 -258 62 -258C56 -258 56 -264 60 -264C50 -262 46 -248 46 -236C48 -212 64 -198 84 -192Z',(-12,86,-276,-188))
+    o+=f'<circle cx="38" cy="-184" r="7" fill="{GLOW}" stroke="{TRIM}" stroke-width="2.2"/>'+L('M38 -191V-177M31 -184H45',TRIM,1.4)
+    # front gable
+    o+=shingled('g','M58 -168L98 -230L138 -168Z',(56,140,-232,-166))+win(98,-176,14,28,GLOW2)
+    # right spire: sweeping roof, tip curls left
+    o+=shingled('r','M116 -166C140 -178 158 -200 166 -232C170 -252 178 -266 194 -270C206 -272 210 -260 202 -258C196 -256 196 -262 200 -263C190 -258 186 -244 186 -230C188 -204 206 -184 250 -166Z',(114,252,-274,-164))
+    # roof eave trim with curls
+    o+=A('M-6 -170C60 -174 180 -172 250 -166L250 -161C180 -166 60 -168 -6 -164Z',TRIM)+curl(-6,-167)+curl(250,-163,-1)
+    # bent brick chimney (cap top ~ (222,-232) feeds the smoke)
+    o+=A('M206 -168H222L220 -200L228 -214L232 -228L216 -232L212 -216L208 -200Z',WALL_DK)
+    o+=L('M207 -178H221M208 -190H220M209 -204H221M214 -218H228',ROOF,1.2,.8)
+    o+=A('M210 -235L236 -229V-224L210 -230Z',TRIM)
+    # windows
+    o+=win(40,-108,20,36,GLOW2)+win(152,-106,22,42)+win(206,-106,20,38)+win(184,-24,14,22,GLOW2)
+    # porch: posts, pointed roof, arched door with planks
+    o+=A('M84 0V-74h5V0ZM127 0V-74h5V0Z',WALL_DK)
+    o+=A('M68 -72L108 -98L148 -72L144 -68L108 -91L72 -68Z',ROOF)+curl(68,-71)+curl(148,-71,-1)
+    o+=A('M92 -6V-50Q92 -66 108 -72Q124 -66 124 -50V-6Z',GLOW2)
+    o+=A('M96 -6V-50Q96 -62 108 -67Q120 -62 120 -50V-6Z','#3b2418')+L('M104 -8V-64M112 -8V-64',GLOW2,1,.35)
+    o+=f'<circle cx="117" cy="-30" r="1.8" fill="{GLOW}"/>'
+    o+=A('M80 6H136V0H80Z',TRIM)+A('M74 12H142V6H74Z',WALL_DK)
+    return o+'</g>'
 def build_layers():
     """returns (defs_markup, [(name, scroll_factor, mouse_depth, markup), ...]) back->front"""
     from anim import sway, drift, drift_rev, bat, smoke, shimmer
