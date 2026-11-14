@@ -121,21 +121,23 @@ async function main() {
       .map(a => a.getAttribute('href'))
       .filter(h => !/^(#|https?:|mailto:|\\/|[\\w./-]+\\.(html|pdf|svg|png)$)/.test(h))`);
     check('no broken in-page links', badLinks.length === 0, JSON.stringify(badLinks));
-    const cardCount = await cdp.evaluate(`document.querySelectorAll('#cards .card').length`);
-    check('6 example cards exist', cardCount === 6, `cards=${cardCount}`);
-    const dotCount = await cdp.evaluate(`document.querySelectorAll('#cards .cdots button').length`);
+    const destCount = await cdp.evaluate(`document.querySelectorAll('#cards .card').length`);
+    check('3 destination cards unchanged', destCount === 3, `cards=${destCount}`);
+    const cardCount = await cdp.evaluate(`document.querySelectorAll('#tcards .tcard').length`);
+    check('6 example string cards exist', cardCount === 6, `cards=${cardCount}`);
+    const dotCount = await cdp.evaluate(`document.querySelectorAll('#tcards .cdots button').length`);
     check('3 carousel dots', dotCount === 3, `dots=${dotCount}`);
-    const activeDot = `[...document.querySelectorAll('#cards .cdots button')].findIndex(d => d.getAttribute('aria-current') === 'true')`;
-    await cdp.evaluate(`document.getElementById('cards').scrollIntoView({block:'center'})`);
+    const activeDot = `[...document.querySelectorAll('#tcards .cdots button')].findIndex(d => d.getAttribute('aria-current') === 'true')`;
+    await cdp.evaluate(`document.getElementById('tcards').scrollIntoView({block:'center'})`);
     const dot0 = await cdp.evaluate(activeDot);
     await sleep(AUTO_ADVANCE_WAIT_MS);
     const dot1 = await cdp.evaluate(activeDot);
     check('active dot changes after ~5.5s', dot0 === 0 && dot1 === 1, JSON.stringify({ dot0, dot1 }));
-    await cdp.evaluate(`document.querySelectorAll('#cards .cdots button')[2].click()`);
+    await cdp.evaluate(`document.querySelectorAll('#tcards .cdots button')[2].click()`);
     const dot2 = await cdp.evaluate(activeDot);
     check('clicking a dot goes to that page', dot2 === 2, `dot=${dot2}`);
     const cardRun = await cdp.evaluate(`(() => {
-      const card = document.querySelectorAll('#cards .cpage')[2].querySelector('.card');
+      const card = document.querySelectorAll('#tcards .cpage')[2].querySelector('.tcard');
       card.click();
       return {
         want: { id: card.dataset.machine, s: card.dataset.input },

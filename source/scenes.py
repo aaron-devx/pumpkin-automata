@@ -311,7 +311,7 @@ def plant_small():
     s.add(tuft(345,340,1.2,'#c8dc50','#a6cc45'))
     return s.out(OUT+'plant_small.svg')
 def leaf_corner():
-    s=S(150,230)
+    s=S(212,238,vb='-44 0 212 238')  # leaves spill left of x=0; widen so card shows the whole leaf
     o=''
     o+=bigleaf(150,230,220,34,-100,-0.08,'#2b8a4a','#5cb45a','#1d6b38',side=-1)
     o+=bigleaf(120,230,170,26,-120,-0.06,'#3fa354','#7cc664','#24793e',side=-1)

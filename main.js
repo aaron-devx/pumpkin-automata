@@ -139,7 +139,7 @@
 /* ---------- example-cards carousel: 3 pages, auto-advance ---------- */
 (function () {
   'use strict';
-  var root = document.getElementById('cards');
+  var root = document.getElementById('tcards');
   if (!root) return;
   var track = root.querySelector('.ctrack');
   var pages = Array.prototype.slice.call(root.querySelectorAll('.cpage'));

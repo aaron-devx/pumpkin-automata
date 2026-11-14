@@ -254,7 +254,7 @@ function selectMachine(id) {
 }
 
 function bindCards() {
-  document.querySelectorAll('.card[data-machine]').forEach((card) => {
+  document.querySelectorAll('.card[data-machine], .tcard[data-machine]').forEach((card) => {
     card.addEventListener('click', () => {
       const sel = els.machine();
       const input = els.input();
