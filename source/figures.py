@@ -6,6 +6,15 @@ def _p(d,fill='none',**kw):
     a=''.join(f' {k.replace("_","-")}="{v}"' for k,v in kw.items())
     return f'<path d="{d}" fill="{fill}"{a}/>'
 
+def potion(cx,cy):
+    # round flask, purple liquid, cork, soft glow
+    o=f'<circle cx="{cx}" cy="{cy}" r="26" fill="#c06bff" opacity=".18"/>'
+    o+=f'<path d="M{cx-5} {cy-22}H{cx+5}L{cx+5} {cy-10}C{cx+17} {cy-6} {cx+19} {cy+14} {cx+8} {cy+20}H{cx-8}C{cx-19} {cy+14} {cx-17} {cy-6} {cx-5} {cy-10}Z" fill="#e8f2ff" fill-opacity=".35" stroke="#e8f2ff" stroke-width="1.6"/>'
+    o+=f'<path d="M{cx-14} {cy+2}C{cx-8} {cy-2} {cx+8} {cy+6} {cx+15} {cy+1}C{cx+16} {cy+12} {cx+10} {cy+19} {cx+7} {cy+19}H{cx-7}C{cx-12} {cy+16} {cx-15} {cy+10} {cx-14} {cy+2}Z" fill="#9b3dff"/>'
+    o+=f'<rect x="{cx-4}" y="{cy-27}" width="8" height="6" rx="2" fill="#8a5a2c"/>'
+    o+=f'<circle cx="{cx-3}" cy="{cy+8}" r="2" fill="#e8c6ff"/><circle cx="{cx+4}" cy="{cy+4}" r="1.4" fill="#e8c6ff"/>'
+    return o
+
 def deck_woman():
     o=''
     # ---- woman in deck chair (svg = ref crop + (100,40)) ----
@@ -19,28 +28,29 @@ def deck_woman():
     o+=_p('M250 292C300 300 360 298 404 286L410 304C380 324 300 330 262 318Z','#ec7a3a')
     o+=_p('M250 292C300 300 360 298 404 286L406 294C360 306 300 308 256 302Z','#d9602a')
     w='<g>'
-    # far leg (bent, lower) + sandal
-    w+='<path d="M372 272L400 328L436 346L438 360L404 362L380 334L352 286Z" fill="#e8a27a"/>'
+    # far leg: thigh along seat (mostly hidden), shin down, sandal
+    w+=bar(252,262,392,280,30).replace('stroke="#3a4452"','stroke="#244c9c"')
+    w+=capsule(394,282,424,346,15,'#e8a27a')
     w+='<path d="M398 352C410 340 432 340 444 348L446 366L398 368Z" fill="#f6e3b4"/><path d="M398 364L448 362L448 372L398 372Z" fill="#3a3f4a"/>'
-    # pants
-    w+='<path d="M228 248C250 216 290 196 340 186C372 180 400 186 412 200L452 250L438 262C420 244 404 232 392 228L388 236C360 254 320 268 280 276C252 280 228 272 228 248Z" fill="#2f5db4"/>'
-    w+='<path d="M340 186C372 180 400 186 412 200L452 250L438 262C420 244 404 232 392 228C384 214 364 196 340 186Z" fill="#244c9c"/>'
-    w+='<path d="M264 246C300 236 340 224 372 214" fill="none" stroke="#244c9c" stroke-width="4" stroke-linecap="round"/>'
-    w+='<path d="M300 268C330 258 356 250 380 238" fill="none" stroke="#3f6fc8" stroke-width="3" stroke-linecap="round"/>'
-    # near lower leg + sandal
-    w+='<path d="M424 252L452 250L500 312L536 324L534 338L494 336L470 314Z" fill="#f2b48c"/>'
-    w+='<path d="M494 326C506 314 528 314 540 322L542 340L494 342Z" fill="#f6e3b4"/><path d="M490 338L544 336L544 346L490 346Z" fill="#3a3f4a"/>'
+    w+='<path d="M398 352C410 340 432 340 444 348L446 366L398 368Z" fill="#f6e3b4"/><path d="M398 364L448 362L448 372L398 372Z" fill="#3a3f4a"/>'
+    # near leg: thigh rests on seat, knee bent ~90, shin down to ground
+    w+=capsule(252,264,414,274,34,'#2f5db4')
+    w+=capsule(262,252,404,262,8,'#3f6fc8').replace('stroke-linecap','opacity=".6" stroke-linecap')
+    w+=capsule(300,284,410,292,6,'#244c9c')
+    w+=capsule(418,278,450,344,16,'#f2b48c')
+    w+=capsule(416,276,424,296,26,'#2f5db4')
+    w+='<g transform="translate(-52 20)"><path d="M494 326C506 314 528 314 540 322L542 340L494 342Z" fill="#f6e3b4"/><path d="M490 338L544 336L544 346L490 346Z" fill="#3a3f4a"/></g>'
     # torso shirt
     w+='<path d="M170 168C188 152 226 150 252 160C276 170 292 196 298 222L266 250C246 258 220 258 204 250C188 232 176 200 170 168Z" fill="#ec5a68"/>'
     w+='<path d="M170 168C180 162 190 160 198 162C196 196 204 228 222 256C214 256 208 254 204 250C188 232 176 200 170 168Z" fill="#d6455a"/>'
-    # raised arm
-    w+='<path d="M262 170L300 150L344 122L372 112L378 126L350 142L310 176L282 196Z" fill="#f2b48c"/>'
+    # raised arm: upper arm down to elbow, forearm up, hand holds potion
+    w+=capsule(268,180,322,226,15,'#f2b48c')
+    w+=capsule(322,226,370,170,13,'#f2b48c')
+    w+='<circle cx="322" cy="226" r="8.5" fill="#e8a27a"/><circle cx="372" cy="166" r="8" fill="#f2b48c"/>'
     w+='<path d="M250 158C264 156 280 162 292 172L276 196C266 186 254 178 244 176Z" fill="#ec5a68"/>'
-    w+='<path d="M366 108C374 104 384 106 388 112L380 122L370 122Z" fill="#e8a27a"/><circle cx="380" cy="122" r="7" fill="#e85a6a"/>'
-    # glass arm
-    w+='<path d="M196 214C212 232 240 236 274 228L276 244C242 254 206 250 188 232Z" fill="#f2b48c"/>'
-    w+='<path d="M276 196H300L296 234C296 238 280 238 280 234Z" fill="#d8f4ff" stroke="#9bd2ea" stroke-width="2"/><path d="M280 214H296L295 232H281Z" fill="#a8e2f6"/>'
-    w+='<path d="M268 226C276 222 284 224 286 232L276 238Z" fill="#e8a27a"/>'
+    w+=potion(384,140)
+    # resting arm across lap
+    w+='<path d="M196 214C212 232 240 236 274 228L276 244C242 254 206 250 188 232Z" fill="#f2b48c"/><circle cx="276" cy="236" r="8" fill="#e8a27a"/>'
     # head, hair, hat
     w+='<path d="M196 128C194 108 206 96 224 96L232 140C226 152 214 166 208 176L198 182C186 166 194 146 196 128Z" fill="#2a2f3a"/>'
     w+='<path d="M210 146L230 140L234 166L214 170Z" fill="#e8a27a"/>'

@@ -8,8 +8,51 @@ import os as _os
 _HERE=_os.path.dirname(_os.path.abspath(__file__))
 _SITE=_os.environ.get('SNAP_SITE') or (_os.path.join(_HERE,'..','site') if _os.path.isdir(_os.path.join(_HERE,'..','site')) else _os.path.join(_HERE,'..'))
 OUT=_os.path.join(_SITE,'svg')+'/'
+def _anim(tag,attr,vals,dur,begin,extra=''):
+    return f'<animate attributeName="{attr}" values="{vals}" dur="{dur}s" begin="-{begin}s" repeatCount="indefinite"{extra}/>'
+
+def night_sky(s):
+    glow=s.rg('wmoonglow',[(0,'#ffffff',.55),(.35,'#ffffff',.2),(1,'#ffffff',0)])
+    o='<g transform="translate(105 -26)">'
+    o+=f'<circle cx="430" cy="104" r="84" fill="{glow}"/>'
+    o+='<path d="M430 62A44 44 0 1 0 430 150A64 64 0 0 1 430 62Z" fill="#ffffff"/>'
+    o+='</g>'
+    stars=[(60,40,2.8),(130,110,2),(190,50,3.2),(250,130,2.2),(310,36,2.6),(350,96,2),(520,40,3),(540,130,2.2),(110,190,2.4),(220,22,2),(500,92,1.8),(40,120,2.6),(570,24,2.4),(300,172,2),(160,160,1.8),(590,86,2)]
+    for i,(x,y,r) in enumerate(stars):
+        a=_anim('c','opacity','.25;1;.25',2.4+i%4*.7,i*.9) if i%2==0 else ''
+        o+=f'<circle cx="{x}" cy="{y}" r="{r}" fill="#ffffff" opacity=".9">{a}</circle>'
+    return o
+
+def fireflies(s):
+    g=s.rg('wfirefly',[(0,'#fff6a8',1),(.35,'#ffe35a',.55),(1,'#ffd23a',0)])
+    pts=[(180,300,0),(300,250,1),(470,330,2),(610,260,3),(720,300,4),(900,360,5),(1010,300,6),(260,380,7)]
+    o=''
+    for x,y,i in pts:
+        dx,dy=14+i%3*6,-8-i%2*8
+        d=3.2+i%3*.8
+        o+=(f'<g><circle cx="{x}" cy="{y}" r="16" fill="{g}"/><circle cx="{x}" cy="{y}" r="3" fill="#fffbd0"/>'
+            f'<animateTransform attributeName="transform" type="translate" values="0 0;{dx} {dy};{-dx//2} {dy*2};0 0" dur="{d+4}s" begin="-{i*1.3}s" repeatCount="indefinite"/>'
+            f'{_anim("g","opacity",".15;1;.2",d,i*.7)}</g>')
+    return o
+
+def jack(cx,by):
+    return f'<g transform="translate({cx} {by}) scale(1.7) translate({-cx} {-by})">'+_jack(cx,by)+'</g>'
+
+def _jack(cx,by):
+    o=f'<ellipse cx="{cx}" cy="{by-26}" rx="50" ry="42" fill="#ffb23a" opacity=".13"/>'
+    o+=f'<ellipse cx="{cx}" cy="{by+1}" rx="30" ry="5" fill="#000" opacity=".3"/>'
+    o+=f'<ellipse cx="{cx-14}" cy="{by-22}" rx="17" ry="21" fill="#d9701a"/><ellipse cx="{cx+14}" cy="{by-22}" rx="17" ry="21" fill="#d9701a"/>'
+    o+=f'<ellipse cx="{cx}" cy="{by-22}" rx="19" ry="23" fill="#f08a24"/>'
+    o+=f'<path d="M{cx} {by-44}V{by-2}" stroke="#c4601a" stroke-width="1.6" fill="none"/>'
+    o+=f'<path d="M{cx-1} {by-44}C{cx-2} {by-52} {cx+2} {by-56} {cx+7} {by-58}L{cx+9} {by-54}C{cx+5} {by-52} {cx+5} {by-48} {cx+5} {by-44}Z" fill="#4a7a2a"/>'
+    face='#ffd24a'
+    o+=f'<path d="M{cx-12} {by-30}L{cx-4} {by-30}L{cx-8} {by-38}Z" fill="{face}"/><path d="M{cx+12} {by-30}L{cx+4} {by-30}L{cx+8} {by-38}Z" fill="{face}"/>'
+    o+=f'<path d="M{cx-14} {by-17}L{cx-8} {by-12}L{cx-4} {by-16}L{cx} {by-12}L{cx+4} {by-16}L{cx+8} {by-12}L{cx+14} {by-17}L{cx+12} {by-9}C{cx+6} {by-4} {cx-6} {by-4} {cx-12} {by-9}Z" fill="{face}"/>'
+    return o
+
 def why_scene():
     s=S(1504,512)
+    s.add(night_sky(s))
     g1=s.lg('wg1',[(0,'#8cc23a'),(1,'#5f9f2a')],0,150,0,512,1)
     crest=[(0,236),(90,200),(167,172),(300,160),(417,158),(520,166),(590,186),(667,250),(733,314),(800,330),(867,336),(1067,344),(1167,372),(1504,392)]
     s.p(smooth(crest,False)+'L1504 512L0 512Z',g1)
@@ -57,11 +100,13 @@ def why_scene():
     s.add(sway(grassfan(40,410,9,80,-170,-110,5,['#2e8a46','#46a552'],0.1,0.2,21),40,410,2,3.8,-1.4))
     s.add(deck_woman())
     s.add(sitting_dog())
+    s.add(jack(752,392))
     for x,y,k in [(338,396,1.3),(397,440,1.2),(485,430,1.1),(1180,430,0.9)]: s.add(tuft(x,y,k,'#d5e24f','#b6d443'))
     s.add(sway(grassfan(830,470,13,120,-170,-10,8,['#1f8a5a','#2fa26a','#47b876','#178050'],0.15,0.3,31),830,470,1.6,4.4,-.9))
     s.add(sway(fan2(s,790,474,46,13,'#eee05c','#6fb13a'),790,474,1.5,5.2,-2))
     s.add(sway(cattail(840,470,800,370,'#e8d24a',bend=-20),840,470,3,3.6,0)); s.add(sway(cattail(850,470,930,350,'#e8d24a',bend=20),850,470,3.4,4.1,-1.2))
     s.add(sway(cattail(830,470,740,410,'#e8d24a',bend=-10),830,470,2.6,3.2,-2.1))
+    s.add(fireflies(s))
     return s.out(OUT+'why_scene.svg')
 
 def footer_art():
