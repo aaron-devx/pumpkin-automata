@@ -177,6 +177,18 @@ function highlightStep() {
     tr.classList.toggle('on', i === stepIndex);
   });
   syncStepControls(result.trace.length - 1);
+  revealActiveRow();
+}
+
+function revealActiveRow() {
+  const row = els.traceBody()?.querySelector('tr.on');
+  const panel = row?.closest('.lab-trace');
+  if (!row || !panel) return;
+  const head = panel.querySelector('thead')?.offsetHeight ?? 0;
+  const p = panel.getBoundingClientRect();
+  const r = row.getBoundingClientRect();
+  const delta = r.top < p.top + head ? r.top - p.top - head : r.bottom > p.bottom ? r.bottom - p.bottom : 0;
+  if (delta !== 0) panel.scrollTop += delta;
 }
 
 function renderTrace(machine, result) {

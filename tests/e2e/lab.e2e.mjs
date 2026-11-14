@@ -120,6 +120,31 @@ async function main() {
       .map(a => a.getAttribute('href'))
       .filter(h => !/^(#|https?:|mailto:|\\/|[\\w./-]+\\.(html|pdf|svg|png)$)/.test(h))`);
     check('no broken in-page links', badLinks.length === 0, JSON.stringify(badLinks));
+    await cdp.send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 800, deviceScaleFactor: 1, mobile: false });
+    await sleep(300);
+    await cdp.evaluate(runCase({ id: 'dfa-suffix-01', s: '1010101010' }));
+    await sleep(1200);
+    await cdp.evaluate(`(document.getElementById('lab').scrollIntoView({ behavior: 'instant', block: 'start' }), 0)`);
+    await sleep(500);
+    const fit = await cdp.evaluate(`(async () => {
+      const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+      const lab = document.getElementById('lab');
+      const panel = document.getElementById('trace-body').closest('.lab-card');
+      const y0 = window.scrollY;
+      const inside = [];
+      for (let i = 0; i < 8; i++) {
+        document.getElementById('step-next').click();
+        await wait(250);
+        const row = document.querySelector('#trace-body tr.on').getBoundingClientRect();
+        const p = panel.getBoundingClientRect();
+        inside.push(row.top >= p.top - 1 && row.bottom <= p.bottom + 1);
+      }
+      return { labH: lab.getBoundingClientRect().height, innerH: window.innerHeight, inside, y0, y1: window.scrollY };
+    })()`);
+    check('lab fits one viewport at 1280x800', fit.labH <= fit.innerH + 2, JSON.stringify({ labH: fit.labH, innerH: fit.innerH }));
+    check('active trace row stays inside trace panel while stepping', fit.inside.every(Boolean), JSON.stringify(fit.inside));
+    check('stepping does not scroll the page', fit.y0 === fit.y1, JSON.stringify({ y0: fit.y0, y1: fit.y1 }));
+
     ws.close();
   } finally {
     const exited = new Promise((r) => chrome.once('exit', r));
