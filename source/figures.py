@@ -28,7 +28,7 @@ def deck_woman():
     o+=_p('M250 292C300 300 360 298 404 286L410 304C380 324 300 330 262 318Z','#ec7a3a')
     o+=_p('M250 292C300 300 360 298 404 286L406 294C360 306 300 308 256 302Z','#d9602a')
     w='<g>'
-    SKIN='#f2b48c'; DRESS='#4a2c5e'; DRESS2='#3a2150'; HAIR='#e8742c'; HAT='#5b3a86'
+    SKIN='#f2b48c'; DRESS='#4a2c5e'; DRESS2='#3a2150'; HAIR='#241a33'; HAIR_HI='#4a3a66'; HAT='#5b3a86'
     def stocking(x0,y0,x1,y1,base):
         # black stocking with purple bands (dashes across the shin)
         return capsule(x0,y0,x1,y1,15,base)+f'<path d="M{x0} {y0+8}L{x1} {y1}" stroke="#8a4fd0" stroke-width="14" stroke-dasharray="5 6"/>'
@@ -38,6 +38,7 @@ def deck_woman():
     w+=stocking(396,280,414,346,'#16121c')+boot(-16)
     # long hair falls down her back, over the back sling
     w+=_p('M172 108C158 126 156 152 164 178C172 206 188 232 208 256C190 254 170 238 158 214C146 188 148 148 160 120Z',HAIR)
+    w+=_p('M166 130C160 156 166 190 184 220','none',stroke=HAIR_HI,**{'stroke-width':2.5,'stroke-linecap':'round','opacity':.8})
     # bodice: back lies on the back sling, hips sit in the seat sling
     w+=_p('M170 160C188 150 206 152 214 162L284 258C290 276 284 294 268 304L246 304C220 272 186 226 160 186C156 174 160 164 170 160Z',DRESS)
     w+=_p('M160 186C186 226 220 272 246 304L258 304C234 272 200 224 176 182Z',DRESS2)
@@ -59,7 +60,10 @@ def deck_woman():
     w+='<path d="M196 120C199 123 203 123 206 120" fill="none" stroke="#2a2f3a" stroke-width="2" stroke-linecap="round"/>'
     w+='<circle cx="198" cy="130" r="4" fill="#f08a8a" opacity=".55"/>'
     w+='<path d="M201 136C204 139 208 138 210 135" fill="none" stroke="#b85a4a" stroke-width="1.8" stroke-linecap="round"/>'
-    w+=_p('M172 112C178 104 196 102 208 108C200 110 190 112 180 120Z',HAIR)
+    # hair cap + bangs under the brim, lock falls forward over the shoulder
+    w+=_p('M170 118C170 104 186 98 202 102C210 104 212 110 210 116C204 112 200 114 196 118C192 113 186 114 182 120C178 116 174 118 172 126Z',HAIR)
+    w+=_p('M174 120C168 136 172 150 184 160C192 168 198 176 196 188C204 178 204 166 196 156C186 146 180 134 182 122Z',HAIR)
+    w+=_p('M178 128C176 142 182 152 190 160','none',stroke=HAIR_HI,**{'stroke-width':2,'stroke-linecap':'round'})
     # witch hat: tilted brim, bent cone, band + gold buckle
     w+=f'<ellipse cx="186" cy="104" rx="46" ry="10" fill="{HAT}" transform="rotate(-16 186 104)"/>'
     w+=_p('M160 108C166 88 168 66 170 50C171 40 165 32 152 34C162 40 168 46 174 54C186 70 196 86 206 98Z',HAT)
@@ -85,8 +89,8 @@ def sitting_dog():
     g+=f'<path d="M594 326C592 300 608 284 630 286C652 288 666 308 664 332C662 350 650 358 632 358L606 358C598 350 595 340 594 326Z" fill="#2e4352"/>'
     g+=f'<path d="M590 357C589 350 596 346 606 347L638 350C645 352 646 358 640 358Z" fill="{D}"/>'
     g+=f'<path d="M612 298C628 294 646 302 654 318" fill="none" stroke="{HL}" stroke-width="3" stroke-linecap="round" opacity=".6"/>'
-    # near front leg: lifted 'shake' paw, reaching toward the woman
-    g+=sway(capsule(572,270,552,300,16,D)+capsule(552,300,526,292,13,D)+f'<ellipse cx="520" cy="291" rx="10" ry="7.5" fill="{D}"/>'+'<path d="M514 286L516 296M520 285L522 296" stroke="#1d2b34" stroke-width="1.4" stroke-linecap="round"/>',572,270,5,1.7,-.4)
+    # near front leg: shoulder -> elbow forward, forearm level, paw droops at the wrist
+    g+=sway(capsule(574,262,550,280,16,D)+capsule(550,280,526,281,13,D)+f'<ellipse cx="519" cy="285" rx="10" ry="8" fill="{D}" transform="rotate(20 519 285)"/>'+'<path d="M512 282L512 292M518 284L517 294" stroke="#1d2b34" stroke-width="1.4" stroke-linecap="round"/>',574,262,5,1.7,-.4)
     # sheen
     g+=f'<path d="M512 188C522 182 536 182 544 189C534 189 523 191 512 196Z" fill="{HL}"/>'
     g+=f'<path d="M574 236C596 250 616 266 634 284C616 272 596 258 578 246Z" fill="{HL}" opacity=".6"/>'
