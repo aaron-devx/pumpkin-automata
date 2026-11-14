@@ -29,6 +29,28 @@ def bird(x,y,s,fill='#fff',dur=60,phase=0,flap=.55,bob=3.2,rev=False,vw=1504,see
     flip=' scale(-1 1)' if rev else ''
     return (f'<g transform="translate({f(x)} {f(y)}) scale({s/10:.3f})">'
             f'<g class="an-drift" style="--a:{f(a*10)}px;--b:{f(b*10)}px;--d:{dur}s;--dl:{f(dl)}s"><g transform="scale(1 1){flip}">{core}</g></g></g>')
+BAT_FILL='#1d1428'; BAT_STRUT='#3d2c55'
+def _bat_wing(m):
+    """one wing hinged at body (0,0); m=-1 left, 1 right. scalloped trailing edge between finger tips"""
+    def pt(x,y): return f'{f(x*m)} {f(y)}'
+    membrane=(f'M{pt(-.8,-1)}C{pt(-3,-3.4)} {pt(-5,-4.6)} {pt(-7,-4.4)}C{pt(-9.6,-4)} {pt(-12,-2.6)} {pt(-13.4,-.8)}'
+              f'Q{pt(-10.8,.4)} {pt(-10,2.8)}Q{pt(-8.2,.8)} {pt(-6,2.4)}Q{pt(-3.6,.6)} {pt(-.8,1.6)}Z')
+    struts=''.join(f'<path d="M{pt(-7,-4.2)}L{pt(x,y)}" stroke="{BAT_STRUT}" stroke-width=".45" stroke-linecap="round"/>'
+                   for x,y in ((-13.2,-.8),(-10,2.5),(-6,2.1)))
+    return f'<path d="{membrane}" fill="{BAT_FILL}"/>{struts}'
+def bat(x,y,s,dur=60,phase=0,flap=.22,zig=1.7,rev=False,vw=1504,seed=0):
+    """bat: membrane wings with finger struts, ears; fast flap + erratic zigzag while drifting across"""
+    fd=-(seed*0.071)%flap
+    zx=f(3+seed%3*1.5); zy=f(4+seed%2*2)
+    head=(f'<ellipse cx="0" cy=".6" rx="1.5" ry="2.3" fill="{BAT_FILL}"/><circle cx="0" cy="-1.7" r="1.3" fill="{BAT_FILL}"/>'
+          f'<path d="M-1.1-2.2L-1-4.2L-.2-2.8ZM1.1-2.2L1-4.2L.2-2.8Z" fill="{BAT_FILL}"/>')
+    core=(f'<g class="an-zig" style="--d:{zig}s;--dl:{-(seed*0.37)%zig:.2f}s;--zx:{zx}px;--zy:{zy}px">'
+          f'<g class="an-bwl" style="--f:{flap}s;--fd:{fd:.2f}s">{_bat_wing(1)}</g>'
+          f'<g class="an-bwr" style="--f:{flap}s;--fd:{fd:.2f}s">{_bat_wing(-1)}</g>{head}</g>')
+    a,b=((vw+80-x)/s,(-80-x)/s) if rev else ((-80-x)/s,(vw+80-x)/s)
+    p0=(0-a)/(b-a); dl=-dur*((p0+phase)%1.0)
+    return (f'<g transform="translate({f(x)} {f(y)}) scale({s/10:.3f})">'
+            f'<g class="an-drift" style="--a:{f(a*10)}px;--b:{f(b*10)}px;--d:{dur}s;--dl:{f(dl)}s">{core}</g></g>')
 def smoke(x,y,n=6,dur=7.5,grad='url(#puff)',r=9,rise=190,drift_x=46,scale=2.8):
     o=''
     for i in range(n):

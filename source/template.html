@@ -90,6 +90,13 @@ button{font:inherit}
 .an-wr{animation:flapR var(--f,.6s) cubic-bezier(.45,0,.55,1) var(--fd,0s) infinite alternate}
 @keyframes flapL{from{transform:rotate(-26deg) scaleY(1.05)}to{transform:rotate(30deg) scaleY(.6)}}
 @keyframes flapR{from{transform:rotate(26deg) scaleY(1.05)}to{transform:rotate(-30deg) scaleY(.6)}}
+.an-bwl,.an-bwr{transform-box:view-box;transform-origin:0 0}
+.an-bwl{animation:batL var(--f,.22s) ease-in-out var(--fd,0s) infinite alternate}
+.an-bwr{animation:batR var(--f,.22s) ease-in-out var(--fd,0s) infinite alternate}
+@keyframes batL{from{transform:rotate(-34deg) scaleY(1.1)}to{transform:rotate(38deg) scaleY(.45)}}
+@keyframes batR{from{transform:rotate(34deg) scaleY(1.1)}to{transform:rotate(-38deg) scaleY(.45)}}
+.an-zig{animation:zig var(--d,1.7s) ease-in-out var(--dl,0s) infinite}
+@keyframes zig{0%,100%{transform:translate(0,0)}18%{transform:translate(var(--zx),calc(var(--zy) * -1))}37%{transform:translate(calc(var(--zx) * -.6),calc(var(--zy) * .7))}55%{transform:translate(calc(var(--zx) * .9),calc(var(--zy) * .3))}74%{transform:translate(calc(var(--zx) * -1),calc(var(--zy) * -.8))}}
 .an-puff{transform-box:fill-box;transform-origin:center;opacity:0;animation:puff var(--d,8s) linear var(--dl,0s) infinite}
 @keyframes puff{0%{transform:translate(0,0) scale(.35);opacity:0}10%{opacity:.85}45%{opacity:.55}100%{transform:translate(var(--rx),var(--ry)) scale(var(--s,3));opacity:0}}
 .an-shim{animation:shim var(--d,5s) ease-in-out var(--dl,0s) infinite alternate}
@@ -337,7 +344,7 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
   .tcard .lf{width:84px}
 }
 @media (prefers-reduced-motion:reduce){
-  .an-sway,.an-drift,.an-bob,.an-wl,.an-wr,.an-shim,.deco-sway{animation:none!important}
+  .an-sway,.an-drift,.an-bob,.an-wl,.an-wr,.an-bwl,.an-bwr,.an-zig,.an-shim,.deco-sway{animation:none!important}
   .an-puff{animation:none!important;opacity:0}
   .card,.plan,.tcard,.card img,.ctrack,.cdots button{transition:none}
 }

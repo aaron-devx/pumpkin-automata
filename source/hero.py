@@ -36,11 +36,9 @@ def house(s,ox=0,oy=0,k=1.0,door=False):
     o+=A([(92,-6),(92,-51),(97,-62),(108,-67),(119,-62),(124,-51),(124,-6)],'#3b2418')
     o+=A([(82,6),(134,6),(134,0),(82,0)],'#6b3f86')+A([(76,12),(140,12),(140,6),(76,6)],'#3a2150')
     return o
-def _bird_shape():
-    pass
 def build_layers():
     """returns (defs_markup, [(name, scroll_factor, mouse_depth, markup), ...]) back->front"""
-    from anim import sway, drift, drift_rev, bird as abird, smoke, shimmer
+    from anim import sway, drift, drift_rev, bat, smoke, shimmer
     s=S(1504,940)
     W='#ffffff'
     L=[]
@@ -64,10 +62,10 @@ def build_layers():
     P(drift(cloud2(120,442,190,44,((.28,.12,.55),(.5,.13,1),(.75,.12,.45)),tail_l=130,tail_r=110),-10,420,170,phase=.5))
     P(drift(cloud2(260,542,280,30,((.25,.14,.7),(.5,.14,1),(.78,.12,.5)),tail_l=50,tail_r=40),210,580,260,phase=.5))
     cut('clouds',.44,6)
-    # ---------- birds ----------
+    # ---------- bats ----------
     for i,(x,y,k,dur,ph,rev) in enumerate([(430,483,9,70,0,False),(860,470,7,84,0,False),(1060,458,8,76,0,False),(330,320,6,96,.4,True),(560,300,5,110,.7,True)]):
-        P(abird(x,y,k*1.25,dur=dur,phase=ph,rev=rev,seed=i,flap=.5+i%3*.08))
-    cut('birds',.38,8)
+        P(bat(x,y,k*1.4,dur=dur,phase=ph,rev=rev,seed=i,flap=.18+i%3*.04))
+    cut('bats',.38,8)
     # ---------- mountains ----------
     s.p('M-120 656H1624V760H-120Z','#2fb2d6')
     s.p(smooth([(-120,700),(-120,615),(0,608),(120,605),(260,622),(330,592),(380,586),(430,602),(500,598),(570,622),(660,628),(760,630),(880,618),(960,594),(1040,602),(1120,586),(1190,612),(1280,612),(1400,604),(1504,612),(1624,606),(1624,700)],False)+'Z',gradu(s,'fh1',[(0,'#5fcbe5'),(1,'#33b5d9')],0,580,0,650))
@@ -132,10 +130,10 @@ def build_layers():
     s.add(f'<g transform="translate(678 698.4) scale(.12)">{deck_woman()}</g>')
     s.add(f'<g transform="translate(691 701) scale(.12)">{sitting_dog()}</g>')
     cut('island',.16,14)
-    # low gulls over the water
+    # low bats skimming the water
     for i,(x,y,k,dur,ph,rev) in enumerate([(300,712,15,58,0,False),(375,690,8,64,0,False),(1094,708,12,52,0,True),(1252,808,24,46,0,True)]):
-        P(abird(x,y,k*1.15,dur=dur,phase=ph,rev=rev,seed=i+7,flap=.62+i%2*.1,bob=3.8))
-    cut('gulls',.14,15)
+        P(bat(x,y,k*.9,dur=dur,phase=ph,rev=rev,seed=i+7,flap=.2+i%2*.06,zig=1.4))
+    cut('lowbats',.14,15)
     # ---------- canopy (tree top-left, branch top-right) ----------
     tr='#155a55'; tree=''
     for d,w in [('M-60 360C-20 330 20 300 40 200C44 180 50 170 60 165',7),('M-40 365C40 300 70 270 100 250C120 238 140 232 160 228',5),('M-20 360C30 280 40 240 44 200',4),('M-80 200C10 185 30 176 50 165',5)]:
