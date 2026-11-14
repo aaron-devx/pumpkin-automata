@@ -20,7 +20,8 @@ def hero_markup():
     for name,fac,depth,m in layers:
         m=prefix_ids(m,'h')
         out.append(f'<div class="layer layer-{name}" data-speed="{fac}" data-depth="{depth}"><svg class="lay" viewBox="0 0 1504 940" preserveAspectRatio="{'xMidYMin' if name=='canopy' else 'xMidYMax'} slice" aria-hidden="true" focusable="false">{m}</svg></div>')
-    return compact('\n'.join(out))
+    from palette import grade
+    return grade(compact('\n'.join(out)), tint_whites=True)
 def inline_svg(fn,p,cls,par=None):
     t=open(os.path.join(SITE,'svg',fn)).read()
     t=prefix_ids(t,p)

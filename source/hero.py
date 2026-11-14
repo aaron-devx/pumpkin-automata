@@ -178,6 +178,7 @@ def build(path):
     body=''.join(m for _,_,_,m in L)
     txt=f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1504 940" width="1504" height="940" preserveAspectRatio="xMidYMax slice"><defs>{defs}</defs>{body}</svg>'
     import re; txt=re.sub(r' (-)',r'\1',txt)
+    from palette import grade; txt=grade(txt)
     open(path,'w').write(txt); return len(txt)
 
 import os as _os

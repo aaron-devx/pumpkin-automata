@@ -33,6 +33,8 @@ class S:
         txt=f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{s.vb}" width="{s.w}" height="{s.h}" preserveAspectRatio="xMidYMid slice"{extra}><defs>{"".join(s.defs)}</defs>{"".join(s.el)}</svg>'
         import re
         txt=re.sub(r' (-)',r'\1',txt)
+        from palette import grade
+        txt=grade(txt)
         open(path,'w').write(txt); return len(txt)
 
 def pts(*a): return ' '.join(f(v) for v in a)
