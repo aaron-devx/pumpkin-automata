@@ -14,10 +14,19 @@
   function setScrolled(y) { nav.classList.toggle('scrolled', y > 40); }
   setScrolled(window.scrollY);
 
+  /* ---------- SMIL (<animate>) ignores CSS: pause it from script ---------- */
+  function setSmil(el, run) {
+    el.querySelectorAll('svg').forEach(function (s) {
+      if (!s.pauseAnimations) return;
+      if (run && !reduce) s.unpauseAnimations(); else s.pauseAnimations();
+    });
+  }
+  if (reduce) setSmil(document, false);
+
   /* ---------- pause offscreen art (perf) ---------- */
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (ents) {
-      ents.forEach(function (e) { e.target.classList.toggle('paused', !e.isIntersecting); });
+      ents.forEach(function (e) { e.target.classList.toggle('paused', !e.isIntersecting); setSmil(e.target, e.isIntersecting); });
     }, { rootMargin: '120px 0px' });
     document.querySelectorAll('.hero-art, .scene, .foot-art').forEach(function (el) { io.observe(el); });
   }
@@ -146,7 +155,8 @@
   var dots = Array.prototype.slice.call(root.querySelectorAll('.cdots button'));
   var INTERVAL_MS = 5000;
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var index = 0, timer = null, held = false, offscreen = false;
+  var playBtn = root.querySelector('.cplay');
+  var index = 0, timer = null, held = false, offscreen = false, paused = false;
 
   function show(i) {
     index = (i + pages.length) % pages.length;
@@ -162,14 +172,24 @@
   function stop() { if (timer) { clearInterval(timer); timer = null; } }
   function start() {
     stop();
-    if (reduce || held || offscreen || document.hidden) return;
+    if (reduce || paused || held || offscreen || document.hidden) return;
     timer = setInterval(function () { show(index + 1); }, INTERVAL_MS);
   }
   function hold(on) { held = on; start(); }
 
   dots.forEach(function (d, n) { d.addEventListener('click', function () { show(n); start(); }); });
+  // Visible pause/play toggle (WCAG 2.2.2); hidden when reduced motion already stops autoplay.
+  if (playBtn) {
+    playBtn.hidden = reduce;
+    playBtn.addEventListener('click', function () {
+      paused = !paused;
+      playBtn.setAttribute('aria-pressed', paused ? 'true' : 'false');
+      start();
+    });
+  }
   // Pause only for keyboard focus; mouse clicks and hover keep autoplay running.
-  root.addEventListener('focusin', function (e) { if (e.target.matches(':focus-visible')) hold(true); });
+  // The toggle is excluded so focusing it does not mask its own state.
+  root.addEventListener('focusin', function (e) { if (e.target !== playBtn && e.target.matches(':focus-visible')) hold(true); });
   root.addEventListener('focusout', function () { hold(false); });
   document.addEventListener('visibilitychange', start);
   if ('IntersectionObserver' in window) {

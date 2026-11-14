@@ -143,6 +143,20 @@ async function main() {
     await sleep(AUTO_ADVANCE_WAIT_MS);
     const dot3 = await cdp.evaluate(activeDot);
     check('autoplay keeps going after dot click', dot3 === 0, `dot=${dot3}`);
+    // Real mouse click on the pause toggle; autoplay must stop, then resume on second click.
+    const playBox = await cdp.evaluate(`(() => { const r = document.querySelector('#tcards .cplay').getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
+    const clickPlay = async () => {
+      for (const type of ['mouseMoved', 'mousePressed', 'mouseReleased']) {
+        await cdp.send('Input.dispatchMouseEvent', { type, x: playBox.x, y: playBox.y, button: 'left', clickCount: 1 });
+      }
+    };
+    await clickPlay();
+    const dotP0 = await cdp.evaluate(activeDot);
+    await sleep(AUTO_ADVANCE_WAIT_MS);
+    const dotP1 = await cdp.evaluate(activeDot);
+    const pressed = await cdp.evaluate(`document.querySelector('#tcards .cplay').getAttribute('aria-pressed')`);
+    check('pause toggle stops autoplay', dotP0 === dotP1 && pressed === 'true', JSON.stringify({ dotP0, dotP1, pressed }));
+    await clickPlay();
     const cardRun = await cdp.evaluate(`(() => {
       const card = document.querySelector('#tcards .cpage[aria-hidden="false"] .tcard');
       card.click();
@@ -179,6 +193,12 @@ async function main() {
     check('lab fits one viewport at 1280x800', fit.labH <= fit.innerH + 2, JSON.stringify({ labH: fit.labH, innerH: fit.innerH }));
     check('active trace row stays inside trace panel while stepping', fit.inside.every(Boolean), JSON.stringify(fit.inside));
     check('stepping does not scroll the page', fit.y0 === fit.y1, JSON.stringify({ y0: fit.y0, y1: fit.y1 }));
+
+    await cdp.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+    await cdp.send('Page.reload');
+    await sleep(2000);
+    const smil = await cdp.evaluate(`(() => { const s = [...document.querySelectorAll('svg')].filter(s => s.querySelector('animate, animateTransform')); return { n: s.length, paused: s.every(x => x.animationsPaused()), btnHidden: document.querySelector('#tcards .cplay').hidden }; })()`);
+    check('reduced motion pauses SMIL + hides toggle', smil.n > 0 && smil.paused && smil.btnHidden, JSON.stringify(smil));
 
     ws.close();
   } finally {

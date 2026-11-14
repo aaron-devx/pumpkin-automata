@@ -243,7 +243,12 @@ table.trace thead th{position:sticky;top:0;background:var(--paper);z-index:1}
 .card-go{all:unset;cursor:pointer}
 .card-go::after{content:"";position:absolute;inset:0;border-radius:24px;z-index:2}
 .card-go:focus-visible::after{outline:3px solid var(--pumpkin);outline-offset:-3px}
-.cdots{display:flex;justify-content:center;gap:24px;margin-top:64px}
+.cnav{display:flex;justify-content:center;align-items:center;gap:28px;margin-top:64px}
+.cdots{display:flex;justify-content:center;gap:24px}
+.cplay{all:unset;box-sizing:border-box;width:32px;height:32px;border-radius:50%;border:2px solid var(--navy);cursor:pointer;position:relative;display:grid;place-items:center}
+.cplay::before{content:"";width:10px;height:12px;border-left:3px solid var(--navy);border-right:3px solid var(--navy);box-sizing:border-box}
+.cplay[aria-pressed="true"]::before{width:0;height:0;border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent var(--navy);margin-left:3px}
+.cplay:focus-visible{outline:3px solid var(--pumpkin);outline-offset:3px}
 .cdots button{all:unset;box-sizing:border-box;width:14px;height:14px;border-radius:50%;background:var(--dot);cursor:pointer;position:relative;transition:background .3s,transform .3s}
 .cdots button::before{content:"";position:absolute;inset:-12px}
 .cdots button[aria-current="true"]{background:var(--navy);transform:scale(1.15)}
@@ -339,7 +344,7 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
   .flinks{grid-template-columns:repeat(2,max-content);column-gap:56px}
   .plan ul{line-height:32px}
   .copy{font-size:14px}
-  .cdots{margin-top:44px}
+  .cnav{margin-top:44px}
   .tcard{padding-bottom:96px}
   .tcard .lf{width:84px}
 }
@@ -477,7 +482,7 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
   <p class="lead-c" data-reveal style="max-width:470px">Quick checks from the slides. Paste into the hero after you pick the matching machine.</p>
   <div class="carousel" id="tcards" data-reveal role="region" aria-roledescription="carousel" aria-label="Example strings">
    <div class="cview"><div class="ctrack" aria-live="off"><div class="cpage" role="group" aria-roledescription="slide" aria-label="Page 1 of 3"><article class="tcard" data-machine="dfa-suffix-01" data-input="01"><img class="av" src="avatars/frankenstein.webp" alt="" width="80" height="80" loading="lazy"><div class="nm"><button type="button" class="card-go" aria-label="Open Suffix 01 in the trace lab with input 01">Suffix 01</button></div><div class="pl">DFA · Σ={0,1}</div><q>Input <strong>01</strong> → accept. Input <strong>10</strong> → reject. Last two symbols decide.</q><div class="dt">Week 7</div><img class="lf" src="svg/leaf_corner.svg" alt=""></article><article class="tcard" data-machine="dfa-aba-dead" data-input="aba"><img class="av" src="avatars/mummy.webp" alt="" width="80" height="80" loading="lazy"><div class="nm"><button type="button" class="card-go" aria-label="Open Contains aba in the trace lab with input aba">Contains aba</button></div><div class="pl">DFA · Σ={a,b}</div><q>Input <strong>aba</strong> → accept. Input <strong>abb</strong> → reject.</q><div class="dt">Week 7</div><img class="lf" src="svg/leaf_corner.svg" alt=""></article></div><div class="cpage" role="group" aria-roledescription="slide" aria-label="Page 2 of 3"><article class="tcard" data-machine="dfa-a-then-bstar" data-input="abbb"><img class="av" src="avatars/pumpkin-head.webp" alt="" width="80" height="80" loading="lazy"><div class="nm"><button type="button" class="card-go" aria-label="Open a then b* in the trace lab with input abbb">a then b*</button></div><div class="pl">DFA · Σ={a,b}</div><q>Input <strong>abbb</strong> → accept. Any <strong>b</strong> first → trap.</q><div class="dt">Week 7</div><img class="lf" src="svg/leaf_corner.svg" alt=""></article><article class="tcard" data-machine="nfa-abc-slide" data-input="1110"><img class="av" src="avatars/vampire.webp" alt="" width="80" height="80" loading="lazy"><div class="nm"><button type="button" class="card-go" aria-label="Open NFA slide in the trace lab with input 1110">NFA slide</button></div><div class="pl">NFA · Σ={0,1}</div><q>Input <strong>1110</strong> → ends in C. Input <strong>0</strong> → accept.</q><div class="dt">Week 10</div><img class="lf" src="svg/leaf_corner.svg" alt=""></article></div><div class="cpage" role="group" aria-roledescription="slide" aria-label="Page 3 of 3"><article class="tcard" data-machine="dfa-aba-dead" data-input="abb"><img class="av" src="avatars/witch.webp" alt="" width="80" height="80" loading="lazy"><div class="nm"><button type="button" class="card-go" aria-label="Open aba dead trap in the trace lab with input abb">aba dead trap</button></div><div class="pl">DFA · Σ={a,b}</div><q>Input <strong>abb</strong> → reject. Dead state catches the miss.</q><div class="dt">Week 7</div><img class="lf" src="svg/leaf_corner.svg" alt=""></article><article class="tcard" data-machine="dfa-a-then-bstar" data-input="b"><img class="av" src="avatars/wolf.webp" alt="" width="80" height="80" loading="lazy"><div class="nm"><button type="button" class="card-go" aria-label="Open b* trap in the trace lab with input b">b* trap</button></div><div class="pl">DFA · Σ={a,b}</div><q>Input <strong>b</strong> → reject. Trap state never leaves.</q><div class="dt">Week 7</div><img class="lf" src="svg/leaf_corner.svg" alt=""></article></div></div></div>
-   <div class="cdots"><button type="button" aria-label="Page 1 of 3" aria-current="true"></button><button type="button" aria-label="Page 2 of 3"></button><button type="button" aria-label="Page 3 of 3"></button></div>
+   <div class="cnav"><div class="cdots"><button type="button" aria-label="Page 1 of 3" aria-current="true"></button><button type="button" aria-label="Page 2 of 3"></button><button type="button" aria-label="Page 3 of 3"></button></div><button type="button" class="cplay" aria-pressed="false" aria-label="Pause autoplay"></button></div>
   </div>
  </div>
 </section>
