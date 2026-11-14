@@ -118,7 +118,7 @@ function renderDiagram(m, active, prev, hotChar) {
       const d = edgePath(a.x, a.y, b.x, b.y);
       const lx = (a.x + b.x) / 2;
       const ly = (a.y + b.y) / 2 - 22;
-      return `<path d="${d}" fill="none" stroke="${stroke}" stroke-width="${sw}"/><text x="${lx}" y="${ly}" text-anchor="middle" font-size="11" fill="${on ? '#f58a45' : '#5a6b75}" font-family="Poppins,sans-serif">${sym}</text>`;
+      return `<path d="${d}" fill="none" stroke="${stroke}" stroke-width="${sw}"/><text x="${lx}" y="${ly}" text-anchor="middle" font-size="11" fill="${on ? '#f58a45' : '#5a6b75'}" font-family="Poppins,sans-serif">${sym}</text>`;
     })
     .join('');
   const nodes = machineStates(m)

@@ -45,8 +45,8 @@ def cards():
 def plans():
     chk='<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8" fill="currentColor"/><path d="M5.2 9.2l2.5 2.4 5-5" stroke="var(--bg)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     P=[
-        ('Pick<br>Machine','01','Choose a finite acceptor',['Open the dropdown in the hero','Match the slide problem','DFA or NFA badge shown'],'Open lab',''),
-        ('Type<br>String','02','Symbols from Σ',['Use only letters in Σ','Example: 1010 or bab','Invalid chars → INVALID'],'Try the hero','dk'),
+        ('Pick<br>Machine','01','Choose a finite acceptor',['Open the dropdown in the hero','Match the slide problem','DFA or NFA badge shown'],'#lab',''),
+        ('Type<br>String','02','Symbols from Σ',['Use only letters in Σ','Example: 1010 or bab','Invalid chars → INVALID'],'#top','dk'),
         ('Trace +<br>Verdict','03','Step the run',['Slider or Next / Back','Highlight active state(s)','ACCEPT or REJECT at end'],'#lab',''),
     ]
     return ''.join(
