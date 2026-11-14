@@ -253,8 +253,23 @@ function selectMachine(id) {
   renderDiagram(m, [m.start], [m.start], '');
 }
 
+function bindCards() {
+  document.querySelectorAll('.card[data-machine]').forEach((card) => {
+    card.addEventListener('click', () => {
+      const sel = els.machine();
+      const input = els.input();
+      if (!sel || !input) return;
+      sel.value = card.dataset.machine;
+      sel.dispatchEvent(new Event('change'));
+      input.value = card.dataset.input ?? '';
+      execute(true);
+    });
+  });
+}
+
 function bind() {
   fillMachines();
+  bindCards();
   const sel = els.machine();
   sel?.addEventListener('change', () => selectMachine(sel.value));
   if (sel) selectMachine(sel.value);

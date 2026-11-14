@@ -10,6 +10,7 @@ const CHROME = process.env.CHROME_BIN ?? '/Applications/Google Chrome.app/Conten
 const PORT = 9333;
 const BOOT_WAIT_MS = 400;
 const BOOT_TRIES = 25;
+const AUTO_ADVANCE_WAIT_MS = 5600;
 
 // Expected verdicts come from the language definitions, not from simulator.js.
 const CASES = [
@@ -120,6 +121,31 @@ async function main() {
       .map(a => a.getAttribute('href'))
       .filter(h => !/^(#|https?:|mailto:|\\/|[\\w./-]+\\.(html|pdf|svg|png)$)/.test(h))`);
     check('no broken in-page links', badLinks.length === 0, JSON.stringify(badLinks));
+    const cardCount = await cdp.evaluate(`document.querySelectorAll('#cards .card').length`);
+    check('6 example cards exist', cardCount === 6, `cards=${cardCount}`);
+    const dotCount = await cdp.evaluate(`document.querySelectorAll('#cards .cdots button').length`);
+    check('3 carousel dots', dotCount === 3, `dots=${dotCount}`);
+    const activeDot = `[...document.querySelectorAll('#cards .cdots button')].findIndex(d => d.getAttribute('aria-current') === 'true')`;
+    await cdp.evaluate(`document.getElementById('cards').scrollIntoView({block:'center'})`);
+    const dot0 = await cdp.evaluate(activeDot);
+    await sleep(AUTO_ADVANCE_WAIT_MS);
+    const dot1 = await cdp.evaluate(activeDot);
+    check('active dot changes after ~5.5s', dot0 === 0 && dot1 === 1, JSON.stringify({ dot0, dot1 }));
+    await cdp.evaluate(`document.querySelectorAll('#cards .cdots button')[2].click()`);
+    const dot2 = await cdp.evaluate(activeDot);
+    check('clicking a dot goes to that page', dot2 === 2, `dot=${dot2}`);
+    const cardRun = await cdp.evaluate(`(() => {
+      const card = document.querySelectorAll('#cards .cpage')[2].querySelector('.card');
+      card.click();
+      return {
+        want: { id: card.dataset.machine, s: card.dataset.input },
+        machine: document.getElementById('machine-select').value,
+        input: document.getElementById('string-input').value,
+        verdict: document.getElementById('lab-verdict').textContent.trim(),
+      };
+    })()`);
+    check('clicking a card sets lab machine + input and runs', cardRun.machine === cardRun.want.id && cardRun.input === cardRun.want.s && cardRun.verdict !== '', JSON.stringify(cardRun));
+
     await cdp.send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 800, deviceScaleFactor: 1, mobile: false });
     await sleep(300);
     await cdp.evaluate(runCase({ id: 'dfa-suffix-01', s: '1010101010' }));

@@ -117,13 +117,24 @@ button{font:inherit}
 .dest h2{font-size:clamp(40px,5.05vw,76px);line-height:1.18;color:#fff;position:relative;z-index:1}
 .dest .sub{max-width:470px;font-size:16px;line-height:1.4;color:#e6eef3;margin:clamp(20px,2.4vw,32px) 0 0;position:relative;z-index:1}
 .dest .btn-o{margin-top:clamp(28px,2.6vw,40px);height:58px;padding:0 32px}
-.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,3.3vw,50px);margin-top:clamp(56px,5.5vw,82px);position:relative;z-index:1;align-items:start}
-.card{background:var(--paper);border-radius:22px;overflow:hidden;color:var(--navy);box-shadow:0 20px 50px -30px rgba(0,0,0,.55)}
-.card:nth-child(2){margin-top:min(12.2vw,184px)}.card:nth-child(3){margin-top:min(25vw,376px)}
-.card .img{overflow:hidden;aspect-ratio:398/330}
-.card img{width:100%;height:100%;object-fit:cover}
-#cards .card:hover,#cards .card:focus-within{transform:none;box-shadow:0 20px 50px -30px rgba(0,0,0,.55)}
-#cards .card:hover img,#cards .card:focus-within img{transform:none}
+.carousel{margin-top:clamp(40px,4vw,64px);position:relative;z-index:1}
+.cview{overflow:hidden;margin:0 -16px;padding:12px 0 20px}
+.ctrack{display:flex;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.cpage{flex:0 0 100%;box-sizing:border-box;padding:0 16px;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(18px,3vw,44px);align-items:stretch}
+.card{position:relative;background:var(--plan-bg);border-radius:22px;overflow:hidden;color:var(--navy);box-shadow:0 20px 50px -30px rgba(0,0,0,.55);cursor:pointer}
+.card .img{overflow:hidden;aspect-ratio:398/330;background:var(--night)}
+.card .img img{width:100%;height:100%;object-fit:contain;display:block}
+.card .cav{width:64px;height:64px;border-radius:50%;object-fit:cover;flex:none;box-shadow:0 0 0 3px var(--pumpkin),0 0 18px 4px rgba(255,122,26,.55);background:var(--night)}
+.card .body{display:flex;gap:18px;align-items:center}
+.card .ct{min-width:0}
+.card-go{all:unset;cursor:pointer}
+.card-go::after{content:"";position:absolute;inset:0;border-radius:22px}
+.card-go:focus-visible::after{outline:3px solid var(--pumpkin);outline-offset:-3px}
+.cdots{display:flex;justify-content:center;gap:18px;margin-top:20px}
+.cdots button{all:unset;box-sizing:border-box;width:14px;height:14px;border-radius:50%;background:rgba(239,233,255,.35);cursor:pointer;position:relative;transition:background .3s,transform .3s}
+.cdots button::before{content:"";position:absolute;inset:-12px}
+.cdots button[aria-current="true"]{background:var(--pumpkin);transform:scale(1.25)}
+.cdots button:focus-visible{outline:3px solid var(--pumpkin);outline-offset:3px}
 .card .body{padding:clamp(20px,2.1vw,32px) clamp(20px,2.1vw,31px) clamp(22px,2vw,30px)}
 .card h3{font-family:'Plus Jakarta Sans';font-weight:500;font-size:clamp(24px,2.26vw,34px);letter-spacing:-.04em;margin:0 0 14px;line-height:1.18}
 .rate{display:flex;align-items:center;gap:8px;font-size:clamp(15px,1.26vw,19px);color:var(--rate);font-weight:500;flex-wrap:wrap}
@@ -131,7 +142,7 @@ button{font:inherit}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--navy);margin:0 4px}
 .loc{display:flex;align-items:center;gap:6px;margin-top:16px;font-size:clamp(15px,1.2vw,18px);font-weight:600}
 .price{margin-top:10px;font-size:clamp(15px,1.2vw,18px);font-weight:600}.price span{color:#7c8890;font-weight:400}
-.dest-hint{display:none}
+
 
 .why{position:relative;overflow:hidden}
 .why .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,659px);gap:clamp(32px,5vw,90px);align-items:start;padding-top:clamp(40px,13vw,196px);position:relative;z-index:2}
@@ -270,13 +281,11 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
   .dest .plants,.dest .plant-s{display:none}
 }
 @media (max-width:900px){
-  .cards{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:18px;margin-left:calc(var(--pad) * -1);margin-right:calc(var(--pad) * -1);padding:10px var(--pad) 30px;scroll-padding:0 var(--pad);scrollbar-width:none;overscroll-behavior-x:contain}
-  .cards::-webkit-scrollbar{display:none}
-  .card{flex:0 0 min(78vw,360px);scroll-snap-align:start}
-  .card:nth-child(n){margin-top:0}
-  .card:hover{transform:none}
-  .dest-hint{display:flex;align-items:center;gap:10px;margin-top:4px;font-size:13px;color:#a9c4d3}
-  .dest-hint i{display:block;width:40px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--orange),transparent)}
+  .cpage{grid-template-columns:minmax(0,1fr);gap:16px}
+  .card .img{aspect-ratio:398/150}
+  .card .body{padding:16px 18px}
+  .card h3{font-size:22px;margin:0 0 6px}
+  .card .meta{margin-top:6px}
 }
 @media (max-width:860px){
   .hero{height:auto;min-height:0;overflow:visible;background:var(--hero-bg);container-type:normal;padding-bottom:4px}
@@ -328,7 +337,7 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
 @media (prefers-reduced-motion:reduce){
   .an-sway,.an-drift,.an-bob,.an-wl,.an-wr,.an-shim,.deco-sway{animation:none!important}
   .an-puff{animation:none!important;opacity:0}
-  .card,.plan,.tcard,.card img{transition:none}
+  .card,.plan,.tcard,.card img,.ctrack,.cdots button{transition:none}
 }
 </style></head>
 <body>
@@ -383,8 +392,10 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
   <h2 class="h" data-reveal>Slide <span class="sw" style="--l:-17%;--r:-6%">problems</span><br>from Week 7<br>and 10</h2>
   <p class="sub" data-reveal>Same card layout — labels are languages from the PDFs, not destinations.</p>
   <div data-reveal><a class="btn-o" href="#lab"><svg width="22" height="20" viewBox="0 0 22 20" fill="none" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"><path d="M2 8h4l9-5v14l-9-5H2z"/><path d="M6 12l2 6h3l-2-6M18 7c1.5 1 1.5 5 0 6M20 4.5c3 2 3 9 0 11"/></svg>Open trace lab</a></div>
-  <div class="cards" id="cards"><article class="card" data-card><div class="img"><img src="svg/card1.svg" alt="Suffix 01 illustration" width="398" height="330" loading="lazy"></div><div class="body"><h3>Suffix 01</h3><div class="meta"><span class="pill">DFA</span><span>Σ={0,1}</span></div><p class="try">try 01</p></div></article><article class="card" data-card><div class="img"><img src="svg/card2.svg" alt="Contains aba illustration" width="398" height="330" loading="lazy"></div><div class="body"><h3>Contains aba</h3><div class="meta"><span class="pill">DFA</span><span>Σ={a,b}</span></div><p class="try">try aba</p></div></article><article class="card" data-card><div class="img"><img src="svg/card3.svg" alt="a then b* illustration" width="398" height="330" loading="lazy"></div><div class="body"><h3>a then b*</h3><div class="meta"><span class="pill">DFA</span><span>Σ={a,b}</span></div><p class="try">try abbb</p></div></article></div>
-  <div class="dest-hint" aria-hidden="true"><i></i>Swipe to explore</div>
+  <div class="carousel" id="cards" data-reveal role="region" aria-roledescription="carousel" aria-label="Example machines">
+   <div class="cview"><div class="ctrack" aria-live="off"><div class="cpage" role="group" aria-roledescription="slide" aria-label="Page 1 of 3"><article class="card" data-machine="dfa-suffix-01" data-input="01"><div class="img"><img src="svg/card1.svg" alt="" width="398" height="330" loading="lazy"></div><div class="body"><img class="cav" src="avatars/frankenstein.webp" alt="" width="192" height="192" loading="lazy"><div class="ct"><h3><button type="button" class="card-go" aria-label="Open Suffix 01 in the trace lab with input 01">Suffix 01</button></h3><div class="meta"><span class="pill">DFA</span><span>Σ={0,1}</span></div><p class="try">try 01</p></div></div></article><article class="card" data-machine="dfa-aba-dead" data-input="aba"><div class="img"><img src="svg/card2.svg" alt="" width="398" height="330" loading="lazy"></div><div class="body"><img class="cav" src="avatars/mummy.webp" alt="" width="192" height="192" loading="lazy"><div class="ct"><h3><button type="button" class="card-go" aria-label="Open Contains aba in the trace lab with input aba">Contains aba</button></h3><div class="meta"><span class="pill">DFA</span><span>Σ={a,b}</span></div><p class="try">try aba</p></div></div></article></div><div class="cpage" role="group" aria-roledescription="slide" aria-label="Page 2 of 3"><article class="card" data-machine="dfa-a-then-bstar" data-input="abbb"><div class="img"><img src="svg/card3.svg" alt="" width="398" height="330" loading="lazy"></div><div class="body"><img class="cav" src="avatars/pumpkin-head.webp" alt="" width="192" height="192" loading="lazy"><div class="ct"><h3><button type="button" class="card-go" aria-label="Open a then b* in the trace lab with input abbb">a then b*</button></h3><div class="meta"><span class="pill">DFA</span><span>Σ={a,b}</span></div><p class="try">try abbb</p></div></div></article><article class="card" data-machine="nfa-abc-slide" data-input="1110"><div class="img"><img src="svg/card1.svg" alt="" width="398" height="330" loading="lazy"></div><div class="body"><img class="cav" src="avatars/vampire.webp" alt="" width="192" height="192" loading="lazy"><div class="ct"><h3><button type="button" class="card-go" aria-label="Open NFA slide in the trace lab with input 1110">NFA slide</button></h3><div class="meta"><span class="pill">NFA</span><span>Σ={0,1}</span></div><p class="try">try 1110</p></div></div></article></div><div class="cpage" role="group" aria-roledescription="slide" aria-label="Page 3 of 3"><article class="card" data-machine="dfa-aba-dead" data-input="abb"><div class="img"><img src="svg/card2.svg" alt="" width="398" height="330" loading="lazy"></div><div class="body"><img class="cav" src="avatars/witch.webp" alt="" width="192" height="192" loading="lazy"><div class="ct"><h3><button type="button" class="card-go" aria-label="Open aba dead trap in the trace lab with input abb">aba dead trap</button></h3><div class="meta"><span class="pill">DFA</span><span>Σ={a,b}</span></div><p class="try">try abb</p></div></div></article><article class="card" data-machine="dfa-a-then-bstar" data-input="b"><div class="img"><img src="svg/card3.svg" alt="" width="398" height="330" loading="lazy"></div><div class="body"><img class="cav" src="avatars/wolf.webp" alt="" width="192" height="192" loading="lazy"><div class="ct"><h3><button type="button" class="card-go" aria-label="Open b* trap in the trace lab with input b">b* trap</button></h3><div class="meta"><span class="pill">DFA</span><span>Σ={a,b}</span></div><p class="try">try b</p></div></div></article></div></div></div>
+   <div class="cdots"><button type="button" aria-label="Page 1 of 3" aria-current="true"></button><button type="button" aria-label="Page 2 of 3"></button><button type="button" aria-label="Page 3 of 3"></button></div>
+  </div>
  </div>
 </section>
 

@@ -128,13 +128,54 @@
   /* gentle depth drift on the staggered cards and the scene art */
   ST.matchMedia({
     '(min-width: 901px)': function () {
-      gsap.utils.toArray('.card').forEach(function (c, i) {
-        gsap.fromTo(c.querySelector('img'), { yPercent: -4 }, { yPercent: 4, ease: 'none', scrollTrigger: { trigger: c, start: 'top bottom', end: 'bottom top', scrub: true } });
-      });
       gsap.fromTo('.dest .plants', { y: 60 }, { y: -60, ease: 'none', scrollTrigger: { trigger: '.dest', start: 'top bottom', end: 'bottom top', scrub: true } });
     }
   });
 
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { ST.refresh(); });
   window.addEventListener('load', function () { ST.refresh(); });
+})();
+
+/* ---------- example-cards carousel: 3 pages, auto-advance ---------- */
+(function () {
+  'use strict';
+  var root = document.getElementById('cards');
+  if (!root) return;
+  var track = root.querySelector('.ctrack');
+  var pages = Array.prototype.slice.call(root.querySelectorAll('.cpage'));
+  var dots = Array.prototype.slice.call(root.querySelectorAll('.cdots button'));
+  var INTERVAL_MS = 5000;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var index = 0, timer = null, held = false, offscreen = false;
+
+  function show(i) {
+    index = (i + pages.length) % pages.length;
+    track.style.transform = 'translateX(' + (-100 * index) + '%)';
+    pages.forEach(function (p, n) {
+      p.toggleAttribute('inert', n !== index);
+      p.setAttribute('aria-hidden', n === index ? 'false' : 'true');
+    });
+    dots.forEach(function (d, n) {
+      if (n === index) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current');
+    });
+  }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } }
+  function start() {
+    stop();
+    if (reduce || held || offscreen || document.hidden) return;
+    timer = setInterval(function () { show(index + 1); }, INTERVAL_MS);
+  }
+  function hold(on) { held = on; start(); }
+
+  dots.forEach(function (d, n) { d.addEventListener('click', function () { show(n); start(); }); });
+  root.addEventListener('mouseenter', function () { hold(true); });
+  root.addEventListener('mouseleave', function () { hold(false); });
+  root.addEventListener('focusin', function () { hold(true); });
+  root.addEventListener('focusout', function () { hold(false); });
+  document.addEventListener('visibilitychange', start);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (ents) { offscreen = !ents[0].isIntersecting; start(); }).observe(root);
+  }
+  show(0);
+  start();
 })();
