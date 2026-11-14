@@ -168,9 +168,8 @@
   function hold(on) { held = on; start(); }
 
   dots.forEach(function (d, n) { d.addEventListener('click', function () { show(n); start(); }); });
-  root.addEventListener('mouseenter', function () { hold(true); });
-  root.addEventListener('mouseleave', function () { hold(false); });
-  root.addEventListener('focusin', function () { hold(true); });
+  // Pause only for keyboard focus; mouse clicks and hover keep autoplay running.
+  root.addEventListener('focusin', function (e) { if (e.target.matches(':focus-visible')) hold(true); });
   root.addEventListener('focusout', function () { hold(false); });
   document.addEventListener('visibilitychange', start);
   if ('IntersectionObserver' in window) {

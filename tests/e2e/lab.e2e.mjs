@@ -133,11 +133,18 @@ async function main() {
     await sleep(AUTO_ADVANCE_WAIT_MS);
     const dot1 = await cdp.evaluate(activeDot);
     check('active dot changes after ~5.5s', dot0 === 0 && dot1 === 1, JSON.stringify({ dot0, dot1 }));
-    await cdp.evaluate(`document.querySelectorAll('#tcards .cdots button')[2].click()`);
+    // Real mouse click: focuses the dot and hovers the carousel, like a user.
+    const dotBox = await cdp.evaluate(`(() => { const b = document.querySelectorAll('#tcards .cdots button')[2]; b.scrollIntoView({ block: 'center' }); const r = b.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
+    for (const type of ['mouseMoved', 'mousePressed', 'mouseReleased']) {
+      await cdp.send('Input.dispatchMouseEvent', { type, x: dotBox.x, y: dotBox.y, button: 'left', clickCount: 1 });
+    }
     const dot2 = await cdp.evaluate(activeDot);
     check('clicking a dot goes to that page', dot2 === 2, `dot=${dot2}`);
+    await sleep(AUTO_ADVANCE_WAIT_MS);
+    const dot3 = await cdp.evaluate(activeDot);
+    check('autoplay keeps going after dot click', dot3 === 0, `dot=${dot3}`);
     const cardRun = await cdp.evaluate(`(() => {
-      const card = document.querySelectorAll('#tcards .cpage')[2].querySelector('.tcard');
+      const card = document.querySelector('#tcards .cpage[aria-hidden="false"] .tcard');
       card.click();
       return {
         want: { id: card.dataset.machine, s: card.dataset.input },
