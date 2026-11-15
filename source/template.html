@@ -245,7 +245,7 @@ table.trace thead th{position:sticky;top:0;background:var(--paper);z-index:1}
 .review{font-family:'Plus Jakarta Sans';font-size:18px;color:#8a949b;margin-top:28px}
 
 /* ---------- testimonials ---------- */
-.testi{position:relative;text-align:center;padding:clamp(60px,5.9vw,88px) 0 clamp(70px,7vw,110px)}
+.testi{position:relative;text-align:center;background:linear-gradient(var(--paper) calc(100% - var(--fade-h)),var(--mist) calc(100% - var(--fade-h)*.75),var(--copy) calc(100% - var(--fade-h)*.5),#4a3a80 calc(100% - var(--fade-h)*.25),var(--deep));--fade-h:clamp(110px,11vw,170px);padding:clamp(60px,5.9vw,88px) 0 calc(clamp(40px,4vw,70px) + var(--fade-h))}
 .tcard{position:relative;border-radius:24px;background:linear-gradient(var(--tcard-a),var(--tcard-b));text-align:left;padding:clamp(28px,2.8vw,42px) clamp(24px,2.4vw,36px) clamp(32px,3vw,46px);overflow:hidden;transition:transform .55s cubic-bezier(.2,.8,.2,1),box-shadow .55s}
 .tcard:hover,.tcard:focus-within{transform:none;box-shadow:none}
 .tcard img.av{width:80px;height:80px}
@@ -273,9 +273,6 @@ table.trace thead th{position:sticky;top:0;background:var(--paper);z-index:1}
 /* ---------- footer ---------- */
 footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b));color:#fff;overflow:hidden}
 .foot-art{position:relative;aspect-ratio:1504/512;overflow:hidden;background:linear-gradient(var(--deep),var(--hero-bg) 45%,var(--foot-horizon) 82%,var(--hero-bg))}
-.foot-art::before,.foot-art::after{content:"";position:absolute;left:0;right:0;z-index:2;pointer-events:none}
-.foot-art::before{top:-1px;height:clamp(48px,6vw,120px);background:linear-gradient(var(--paper),rgba(239,233,255,.55) 35%,rgba(239,233,255,0))}
-.foot-art::after{bottom:-1px;height:clamp(40px,5vw,110px);background:linear-gradient(rgba(27,18,51,0),rgba(27,18,51,.85) 70%,var(--hero-bg))}
 .foot-svg{position:absolute;inset:0;width:100%;height:100%}
 .fbody{display:grid;grid-template-columns:minmax(0,430px) minmax(0,1fr);gap:40px 60px;padding-top:clamp(56px,5.3vw,79px)}
 .flogo{display:flex;align-items:center;gap:12px;font-family:'Plus Jakarta Sans';font-weight:700;font-size:27px;letter-spacing:-.04em}
