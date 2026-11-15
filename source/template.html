@@ -1,9 +1,11 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>StateStream — AL102 Finite Acceptors</title>
+<title>Pumpkin Automata — AL102 Finite Acceptors</title>
 <meta name="description" content="AL102 automata lab: run strings on DFA and NFA with step-by-step traces.">
+<meta property="og:title" content="Pumpkin Automata — AL102 Finite Acceptors">
+<meta property="og:description" content="AL102 automata lab: run strings on DFA and NFA with step-by-step traces.">
 <meta name="theme-color" content="#1b1233">
-<link rel="icon" href="svg/logo.svg" type="image/svg+xml">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2048%2048%22%3E%3Cpath%20d=%22M22%2011c0-5%203-8%208-8l1%203c-3%200-5%202-5%205z%22%20fill=%22%234f9a3c%22/%3E%3Cg%20fill=%22%23f7821b%22%20stroke=%22%23b34c0a%22%20stroke-width=%221.6%22%3E%3Cellipse%20cx=%2213%22%20cy=%2228%22%20rx=%229%22%20ry=%2215%22/%3E%3Cellipse%20cx=%2235%22%20cy=%2228%22%20rx=%229%22%20ry=%2215%22/%3E%3Cellipse%20cx=%2224%22%20cy=%2228%22%20rx=%2211%22%20ry=%2216%22/%3E%3C/g%3E%3Cg%20fill=%22%232a1448%22%3E%3Cpath%20d=%22M13%2022l5-6%205%206z%22/%3E%3Cpath%20d=%22M25%2022l5-6%205%206z%22/%3E%3Cpath%20d=%22M13%2032l4-2%203%204%204-4%204%204%203-4%204%202c-1%206-5%2010-11%2010s-10-4-11-10z%22/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap">
 <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.4/dist/lenis.css">
@@ -29,6 +31,8 @@ button{font:inherit}
 .nav .container{height:100%;display:flex;align-items:center;color:var(--mist);text-shadow:0 1px 6px rgba(18,11,36,.6)}
 .nav.scrolled{--nav-h:72px;background:rgba(27,18,51,.82);-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);box-shadow:0 8px 30px -18px rgba(13,34,48,.45)}
 .logo{display:flex;align-items:center;gap:10px;font-family:'Plus Jakarta Sans';font-weight:700;font-size:21px;letter-spacing:-.04em;color:var(--moon)}
+.logo .lw{display:flex;flex-direction:column;line-height:1.1;white-space:nowrap}
+.tagline{font-family:Poppins;font-weight:400;font-size:11px;letter-spacing:.02em;opacity:.8;margin-top:2px}
 .menu{display:flex;gap:clamp(28px,4.6vw,69px);margin:0 auto;font-size:14px}
 .menu a,.auth a:not(.reg){position:relative;padding:6px 0}
 .menu a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:2px;background:var(--orange);transform:scaleX(0);transform-origin:right;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
@@ -374,7 +378,7 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
 <body>
 <header class="nav" id="nav">
  <div class="container">
-  <a class="logo" href="#top" aria-label="StateStream home"><img src="svg/logo.svg" width="34" height="34" alt="">StateStream</a>
+  <a class="logo" href="#top" aria-label="Pumpkin Automata home"><svg class="pk" width="34" height="34" viewBox="0 0 48 48" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M22 11c0-5 3-8 8-8l1 3c-3 0-5 2-5 5z" fill="#4f9a3c"/><g fill="#f7821b" stroke="#b34c0a" stroke-width="1.6" stroke-linejoin="round"><ellipse cx="13" cy="28" rx="9" ry="15"/><ellipse cx="35" cy="28" rx="9" ry="15"/><ellipse cx="24" cy="28" rx="11" ry="16"/></g><g fill="#2a1448"><path d="M13 22l5-6 5 6z"/><path d="M25 22l5-6 5 6z"/><path d="M13 32l4-2 3 4 4-4 4 4 3-4 4 2c-1 6-5 10-11 10s-10-4-11-10z"/></g><path d="M20 34v-3l-2 1zM28 34v-3l2 1z" fill="#fff4d6"/></svg><span class="lw">Pumpkin Automata<small class="tagline">AL102 · DFA/NFA Simulator</small></span></a>
   <nav class="menu" aria-label="Primary"><a href="#top">Lab</a><a href="#destinations">Problems</a><a href="#packages">Read trace</a><a href="#lab">Trace</a></nav>
   <div class="auth"><a href="#about">AL102</a><a class="reg" href="#lab">Run</a></div>
   <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="drawer"><i></i><i></i><i></i></button>
@@ -502,7 +506,7 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
 <section class="testi">
  <div class="container">
   <h2 class="h" data-reveal>Example <span class="sw" style="--l:-22%;--r:28%">strings</span><br>to try</h2>
-  <p class="lead-c" data-reveal style="max-width:470px">Quick checks from the slides. Paste into the hero after you pick the matching machine.</p>
+  <p class="lead-c" data-reveal style="max-width:470px">Strings from the slides. Click a card to run it.</p>
   <div class="carousel" id="tcards" data-reveal role="region" aria-roledescription="carousel" aria-label="Example strings">
    <div class="cview"><div class="ctrack" aria-live="off">{{TCARDS}}</div></div>
    <div class="cnav"><div class="cdots"><button type="button" aria-label="Page 1 of 3" aria-current="true"></button><button type="button" aria-label="Page 2 of 3"></button><button type="button" aria-label="Page 3 of 3"></button></div><button type="button" class="cplay" aria-pressed="false" aria-label="Pause autoplay"></button></div>
@@ -518,7 +522,7 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
  <div class="container">
   <div class="fbody">
    <div data-reveal>
-    <a class="flogo" href="#top"><img src="svg/logo_white.svg" width="42" height="42" alt="">StateStream</a>
+    <a class="flogo" href="#top"><svg class="pk" width="42" height="42" viewBox="0 0 48 48" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M22 11c0-5 3-8 8-8l1 3c-3 0-5 2-5 5z" fill="#4f9a3c"/><g fill="#f7821b" stroke="#b34c0a" stroke-width="1.6" stroke-linejoin="round"><ellipse cx="13" cy="28" rx="9" ry="15"/><ellipse cx="35" cy="28" rx="9" ry="15"/><ellipse cx="24" cy="28" rx="11" ry="16"/></g><g fill="#2a1448"><path d="M13 22l5-6 5 6z"/><path d="M25 22l5-6 5 6z"/><path d="M13 32l4-2 3 4 4-4 4 4 3-4 4 2c-1 6-5 10-11 10s-10-4-11-10z"/></g><path d="M20 34v-3l-2 1zM28 34v-3l2 1z" fill="#fff4d6"/></svg>Pumpkin Automata</a>
     <p>AL102 automata lab — finite acceptors with step traces. Visual skin from the SnapTrips vector demo; content is for Automata Theory class.</p>
     <a class="fcontact" href="#lab">Open lab<svg width="30" height="14" viewBox="0 0 30 14"><path d="M1 7h27M22 1l6 6-6 6" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     <a class="fmail" href="#about">AL102 · Formal Language</a>
@@ -526,7 +530,7 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
    <nav class="flinks" aria-label="Footer" data-reveal><a class="on" href="#about">Theory</a><a href="#lab">Trace</a><a href="#destinations">Problems</a><a href="#packages">Read trace</a><a href="#top">Hero</a></nav>
   </div>
   <div class="fhr"></div>
-  <div class="copy">© StateStream · AL102 lab demo.</div>
+  <div class="copy">© Pumpkin Automata · AL102 lab demo.</div>
  </div>
 </footer>
 

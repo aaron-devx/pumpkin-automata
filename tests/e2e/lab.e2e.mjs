@@ -180,6 +180,18 @@ async function main() {
       heroBtn: document.querySelector('.btn-o[href="#packages"]')?.textContent.trim(),
     })`);
     check('nav has "Read trace" and no "Steps"', guide.nav.includes('Read trace') && !guide.nav.includes('Steps'), JSON.stringify(guide.nav));
+    const brand = await cdp.evaluate(`({
+      title: document.title,
+      navBrand: document.querySelector('.nav .logo')?.textContent.replace(/\\s+/g, ' ').trim(),
+      tagline: document.querySelector('.nav .tagline')?.textContent.trim(),
+      hasOld: /statestream/i.test(document.body.innerText + document.body.textContent),
+      favicon: document.querySelector('link[rel="icon"]')?.getAttribute('href') ?? '',
+    })`);
+    check('document title contains "Pumpkin Automata"', brand.title.includes('Pumpkin Automata'), brand.title);
+    check('nav brand text has "Pumpkin Automata"', (brand.navBrand ?? '').includes('Pumpkin Automata'), JSON.stringify(brand));
+    check('nav tagline is "AL102 · DFA/NFA Simulator"', brand.tagline === 'AL102 · DFA/NFA Simulator', JSON.stringify(brand));
+    check('no "StateStream" in page text', !brand.hasOld, 'found');
+    check('favicon link exists', brand.favicon.startsWith('data:image/svg+xml'), brand.favicon.slice(0, 40));
     check('guide section heading is "How to read the trace"', guide.heading === 'How to read the trace', JSON.stringify(guide));
     check('guide has 4 items', guide.items === 4, JSON.stringify(guide));
     check('hero button points to the read-trace guide', guide.heroBtn === 'How to read the trace', JSON.stringify(guide));
