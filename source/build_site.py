@@ -47,11 +47,11 @@ TCARDS_PER_PAGE=2
 def tcards():
     # (title, kind·sigma, quote html, source, machine id, input, avatar)
     T=[
-        ('Suffix 01','DFA · Σ={0,1}','Input <strong>01</strong> → accept. Input <strong>10</strong> → reject. Last two symbols decide.','Week 7','dfa-suffix-01','01','frankenstein'),
-        ('Contains aba','DFA · Σ={a,b}','Input <strong>aba</strong> → accept. Input <strong>abb</strong> → reject.','Week 7','dfa-aba-dead','aba','mummy'),
+        ('Ends with 10','DFA · Σ={0,1}','Input <strong>110</strong> → accept. Input <strong>101</strong> → reject. Last two symbols decide.','Week 7','dfa-ends-10','110','frankenstein'),
+        ('Contains bab','DFA · Σ={a,b}','Input <strong>ababb</strong> → accept. Input <strong>abba</strong> → reject.','Week 7','dfa-contains-bab','ababb','mummy'),
         ('a then b*','DFA · Σ={a,b}','Input <strong>abbb</strong> → accept. Any <strong>b</strong> first → trap.','Week 7','dfa-a-then-bstar','abbb','pumpkin-head'),
         ('NFA slide','NFA · Σ={0,1}','Input <strong>1110</strong> → ends in C. Input <strong>0</strong> → accept.','Week 10','nfa-abc-slide','1110','vampire'),
-        ('aba dead trap','DFA · Σ={a,b}','Input <strong>abb</strong> → reject. Dead state catches the miss.','Week 7','dfa-aba-dead','abb','witch'),
+        ('Begins with 0','DFA · Σ={0,1}','Input <strong>010</strong> → accept. Input <strong>10</strong> → reject. Dead state catches a leading 1.','Week 7','dfa-begins-0','010','witch'),
         ('b* trap','DFA · Σ={a,b}','Input <strong>b</strong> → reject. Trap state never leaves.','Week 7','dfa-a-then-bstar','b','wolf'),
     ]
     def one(c):

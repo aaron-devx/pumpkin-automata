@@ -18,12 +18,16 @@ const CASES = [
   { id: 'nfa-abc-slide', s: '1110', want: 'ACCEPTED' },
   { id: 'nfa-abc-slide', s: '1', want: 'REJECTED' },
   { id: 'nfa-abc-slide', s: '012', want: 'INVALID' },
-  { id: 'dfa-aba-dead', s: 'aba', want: 'ACCEPTED' },
-  { id: 'dfa-aba-dead', s: 'abb', want: 'REJECTED' },
+  { id: 'dfa-contains-bab', s: 'ababb', want: 'ACCEPTED' },
+  { id: 'dfa-contains-bab', s: 'abba', want: 'REJECTED' },
+  { id: 'nfa-ends-aab', s: 'baab', want: 'ACCEPTED' },
+  { id: 'nfa-ends-aab', s: 'aba', want: 'REJECTED' },
+  { id: 'dfa-begins-0', s: '010', want: 'ACCEPTED' },
+  { id: 'dfa-begins-0', s: '10', want: 'REJECTED' },
   { id: 'dfa-a-then-bstar', s: 'abbb', want: 'ACCEPTED' },
   { id: 'dfa-a-then-bstar', s: 'b', want: 'REJECTED' },
-  { id: 'dfa-suffix-01', s: '101', want: 'ACCEPTED' },
-  { id: 'dfa-suffix-01', s: '10', want: 'REJECTED' },
+  { id: 'dfa-ends-10', s: '10', want: 'ACCEPTED' },
+  { id: 'dfa-ends-10', s: '101', want: 'REJECTED' },
 ];
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -99,7 +103,7 @@ async function main() {
     check('no JS errors on load', cdp.errors.length === 0, cdp.errors.join(' | '));
 
     const opts = await cdp.evaluate(`[...document.querySelectorAll('#machine-select option')].map(o => o.textContent)`);
-    check('dropdown has 4 machines', opts.length === 4, JSON.stringify(opts));
+    check('dropdown has 6 machines', opts.length === 6, JSON.stringify(opts));
     check('dropdown lists DFA and NFA', opts.some((t) => t.startsWith('DFA')) && opts.some((t) => t.startsWith('NFA')), JSON.stringify(opts));
 
     const diagram = await cdp.evaluate(`document.querySelectorAll('#state-diagram circle').length`);
@@ -171,7 +175,7 @@ async function main() {
 
     await cdp.send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 800, deviceScaleFactor: 1, mobile: false });
     await sleep(300);
-    await cdp.evaluate(runCase({ id: 'dfa-suffix-01', s: '1010101010' }));
+    await cdp.evaluate(runCase({ id: 'dfa-ends-10', s: '1010101010' }));
     await sleep(1200);
     await cdp.evaluate(`(document.getElementById('lab').scrollIntoView({ behavior: 'instant', block: 'start' }), 0)`);
     await sleep(500);
