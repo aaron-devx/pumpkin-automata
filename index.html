@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.4/dist/lenis.css">
 <script>(function(d){if(!matchMedia('(prefers-reduced-motion: reduce)').matches){d.classList.add('js-anim');setTimeout(function(){if(!window.__animReady)d.classList.remove('js-anim')},4000)}})(document.documentElement)</script>
 <style>
-:root{--navy:#1b1233;--ink:#1b1233;--orange:#ff7a1a;--pad:clamp(20px,6.9vw,104px);--maxw:1296px;--nav-h:96px;--hero-bg:#1b1233;--deep:#120b24;--dark-2:#241845;--dark-3:#1d1338;--orange-2:#ffa25a;--plan-bg:#efe9ff;--plan-dk:#1b1233;--lab-bg:#f6f2ff;--line:#e0d8f2;--muted:#6a5f80;--hi:#fff1e2;--feat:#6fc23a;--feat-hi:#8be04e;--notch:#21163e;--gold:#f6c26a;--rate:#6b3fd6;--foot-b:#1a1030;--flink:#c7b8e8;--copy:#b9acd6;--tcard-a:#e6dcff;--tcard-b:#f5f1ff;--dot:#ddd3f2;--paper:#fff;--night:#1b1233;--pumpkin:#ff7a1a;--slime:#8be04e;--moon:#f4e9c1;--mist:#efe9ff}
+:root{--navy:#1b1233;--ink:#1b1233;--orange:#ff7a1a;--pad:clamp(20px,6.9vw,104px);--maxw:1296px;--nav-h:96px;--hero-bg:#1b1233;--deep:#120b24;--dark-2:#241845;--dark-3:#1d1338;--orange-2:#ffa25a;--plan-bg:#efe9ff;--plan-dk:#1b1233;--lab-bg:#f6f2ff;--line:#e0d8f2;--muted:#6a5f80;--hi:#fff1e2;--feat:#6fc23a;--feat-hi:#8be04e;--notch:#21163e;--gold:#f6c26a;--rate:#6b3fd6;--foot-b:#1a1030;--flink:#a99bd0;--copy:#b9acd6;--tcard-a:#e6dcff;--tcard-b:#f5f1ff;--dot:#ddd3f2;--paper:#fff;--night:#1b1233;--pumpkin:#ff7a1a;--slime:#8be04e;--moon:#f4e9c1;--mist:#efe9ff}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-behavior:auto;overflow-x:clip}
 body{margin:0;background:var(--paper);font-family:Poppins,system-ui,sans-serif;color:var(--navy);overflow-x:clip;-webkit-font-smoothing:antialiased}
@@ -284,9 +284,11 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
 .fcontact{margin-top:clamp(40px,4.5vw,64px);font-size:15px;display:inline-flex;gap:14px;align-items:center;transition:gap .3s}
 .fcontact:hover{gap:20px}
 .fmail{display:block;font-size:clamp(20px,1.73vw,26px);line-height:34px;margin-top:4px}
-.flinks{display:grid;grid-template-columns:repeat(3,max-content);justify-content:end;column-gap:clamp(40px,9.5vw,190px);row-gap:clamp(40px,7vw,110px);padding-top:clamp(20px,3.5vw,52px);font-size:clamp(18px,1.4vw,21px)}
-.flinks a{color:var(--flink);text-decoration:none;transition:color .3s}.flinks a:hover{color:#fff;text-decoration:underline;text-underline-offset:4px}
-.flinks a.on{color:#fff;text-decoration:none}
+.flinks{display:grid;grid-template-columns:repeat(2,max-content);justify-content:end;align-content:start;column-gap:clamp(48px,7vw,120px);padding-top:clamp(20px,3.5vw,52px)}
+.fbody .fhead{margin:0 0 18px;line-height:1.2;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--pumpkin)}
+.fcol ul{list-style:none;margin:0;padding:0;display:grid;gap:14px;font-size:clamp(16px,1.2vw,18px)}
+.flinks a,.copy a{color:var(--flink);text-decoration:none;transition:color .3s}
+.flinks a:hover,.flinks a:focus-visible,.copy a:hover,.copy a:focus-visible{color:#fff;text-decoration:underline;text-underline-offset:4px}
 .fhr{height:1px;background:rgba(255,255,255,.7);margin-top:clamp(48px,5vw,70px)}
 .copy{text-align:center;font-size:16px;color:var(--copy);padding:32px 0 48px}
 
@@ -305,7 +307,7 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
   .plan-col:nth-child(odd){margin-top:0}
   .plans{gap:40px}
   .fbody{grid-template-columns:1fr}
-  .flinks{justify-content:start;grid-template-columns:repeat(3,max-content);row-gap:28px;padding-top:0}
+  .flinks{justify-content:start;row-gap:28px;padding-top:0}
   .dest .plants{opacity:.85;width:clamp(170px,30vw,300px)}
 }
 @media (max-width:700px){
@@ -534,14 +536,17 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
   <div class="fbody">
    <div data-reveal>
     <a class="flogo" href="#top"><svg class="pk" width="42" height="42" viewBox="0 0 48 48" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M22 11c0-5 3-8 8-8l1 3c-3 0-5 2-5 5z" fill="#4f9a3c"/><g fill="#f7821b" stroke="#b34c0a" stroke-width="1.6" stroke-linejoin="round"><ellipse cx="13" cy="28" rx="9" ry="15"/><ellipse cx="35" cy="28" rx="9" ry="15"/><ellipse cx="24" cy="28" rx="11" ry="16"/></g><g fill="#2a1448"><path d="M13 22l5-6 5 6z"/><path d="M25 22l5-6 5 6z"/><path d="M13 32l4-2 3 4 4-4 4 4 3-4 4 2c-1 6-5 10-11 10s-10-4-11-10z"/></g><path d="M20 34v-3l-2 1zM28 34v-3l2 1z" fill="#fff4d6"/></svg>Pumpkin Automata</a>
-    <p>AL102 automata lab — finite acceptors with step traces. Visual skin from the SnapTrips vector demo; content is for Automata Theory class.</p>
+    <p>DFA &amp; NFA simulator for AL102 Automata Theory. Pick a slide problem, type a string, watch each step.</p>
     <a class="fcontact" href="#lab">Open lab<svg width="30" height="14" viewBox="0 0 30 14"><path d="M1 7h27M22 1l6 6-6 6" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-    <a class="fmail" href="#about">AL102 · Formal Language</a>
+    <span class="fmail">AL102 · Automata Theory</span>
    </div>
-   <nav class="flinks" aria-label="Footer" data-reveal><a class="on" href="#about">Theory</a><a href="#lab">Trace</a><a href="#destinations">Problems</a><a href="#packages">Read trace</a><a href="#top">Hero</a></nav>
+   <nav class="flinks" aria-label="Footer" data-reveal>
+    <div class="fcol"><p class="fhead">Simulator</p><ul><li><a href="#top">Run a string</a></li><li><a href="#lab">Trace</a></li><li><a href="#packages">Read trace</a></li></ul></div>
+    <div class="fcol"><p class="fhead">Course</p><ul><li><a href="#about">DFA &amp; NFA</a></li><li><a href="#dfa-vs-nfa">DFA vs NFA</a></li><li><a href="#destinations">Slide problems</a></li></ul></div>
+   </nav>
   </div>
   <div class="fhr"></div>
-  <div class="copy">© Pumpkin Automata · AL102 lab demo.</div>
+  <div class="copy">© Pumpkin Automata · AL102 lab demo · <a href="#top">Back to top ↑</a></div>
  </div>
 </footer>
 

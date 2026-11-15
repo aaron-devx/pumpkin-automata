@@ -125,6 +125,16 @@ async function main() {
       .map(a => a.getAttribute('href'))
       .filter(h => !/^(#|https?:|mailto:|\\/|[\\w./-]+\\.(html|pdf|svg|png)$)/.test(h))`);
     check('no broken in-page links', badLinks.length === 0, JSON.stringify(badLinks));
+    const foot = await cdp.evaluate(`(() => {
+      const links = [...document.querySelectorAll('footer a[href^="#"]')];
+      return {
+        count: document.querySelectorAll('.flinks a').length,
+        active: document.querySelectorAll('.flinks a.on').length,
+        missing: links.map(a => a.getAttribute('href')).filter(h => h !== '#' && !document.getElementById(h.slice(1))),
+        white: [...document.querySelectorAll('.flinks a')].filter(a => getComputedStyle(a).color === 'rgb(255, 255, 255)').length,
+      };
+    })()`);
+    check('footer links: 6, none active/white, all targets exist', foot.count === 6 && foot.active === 0 && foot.white === 0 && foot.missing.length === 0, JSON.stringify(foot));
     const destCount = await cdp.evaluate(`document.querySelectorAll('#cards .card').length`);
     check('6 destination problem cards', destCount === 6, `cards=${destCount}`);
     const staleText = await cdp.evaluate(`/Suffix 01|Contains aba/.test(document.body.textContent)`);
