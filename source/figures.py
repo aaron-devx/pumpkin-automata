@@ -1,4 +1,4 @@
-"""Shared figures: witch in deck chair + sitting dog (why scene coords; hero reuses scaled)."""
+"""Shared figures: witch in deck chair + sitting black cat (why scene coords; hero reuses scaled)."""
 from comp import capsule
 from anim import sway
 
@@ -74,37 +74,37 @@ def deck_woman():
     o+=(bar(267,350,380,281,9)); o+=(bar(383,287,424,356,10))
     return o
 
-def sitting_dog():
-    # ---- dog: lean sitting hound facing the woman, one paw lifted (hand-drawn) ----
-    D='#334a59'; D2='#243541'; HL='#46606f'
-    g='<g class="dog">'
-    g+='<ellipse cx="612" cy="358" rx="78" ry="6" fill="#3f7a26" opacity=".35"/>'
-    g+=sway(f'<path d="M660 346C686 344 700 326 704 298C705 290 701 286 697 290C694 316 684 332 658 337Z" fill="{D}"/>',662,342,8,1.05,0)
-    # far front leg (behind, darker)
-    g+=f'<path d="M566 286L571 350C571 354 575 355 577 356C577 358 570 358 565 358C561 358 560 355 560 350L556 290Z" fill="{D2}"/>'
-    # body, neck, head
-    g+=(f'<path d="M482 203C486 198 496 196 506 194C510 186 516 182 526 182C540 182 549 191 552 203C557 214 566 222 578 230C600 244 622 262 640 280C656 296 666 314 668 334'
-        f'C669 348 664 356 656 357L600 357C594 340 588 318 584 300C578 286 570 274 560 264C548 252 534 240 520 233C510 229 500 225 492 222C484 218 479 209 482 203Z" fill="{D}"/>')
-    # haunch + hind foot
-    g+=f'<path d="M594 326C592 300 608 284 630 286C652 288 666 308 664 332C662 350 650 358 632 358L606 358C598 350 595 340 594 326Z" fill="#2e4352"/>'
-    g+=f'<path d="M590 357C589 350 596 346 606 347L638 350C645 352 646 358 640 358Z" fill="{D}"/>'
-    g+=f'<path d="M612 298C628 294 646 302 654 318" fill="none" stroke="{HL}" stroke-width="3" stroke-linecap="round" opacity=".6"/>'
-    # near front leg: shoulder -> elbow forward, forearm level, paw droops at the wrist
-    g+=sway(capsule(574,262,550,280,16,D)+capsule(550,280,526,281,13,D)+f'<ellipse cx="519" cy="285" rx="10" ry="8" fill="{D}" transform="rotate(20 519 285)"/>'+'<path d="M512 282L512 292M518 284L517 294" stroke="#1d2b34" stroke-width="1.4" stroke-linecap="round"/>',574,262,5,1.7,-.4)
-    # sheen
-    g+=f'<path d="M512 188C522 182 536 182 544 189C534 189 523 191 512 196Z" fill="{HL}"/>'
-    g+=f'<path d="M574 236C596 250 616 266 634 284C616 272 596 258 578 246Z" fill="{HL}" opacity=".6"/>'
-    # collar wraps the neck (under the ear), tag hangs at the throat
-    g+='<path d="M556 208L568 220C560 236 547 246 532 250L526 240C540 235 551 225 556 208Z" fill="#e2445a"/>'
-    g+='<path d="M558 214C552 228 543 237 530 243" fill="none" stroke="#b8304a" stroke-width="1.6" stroke-linecap="round"/>'
-    g+='<circle cx="532" cy="253" r="4.6" fill="#f6c84a" stroke="#c9a03a" stroke-width="1"/><circle cx="532" cy="253" r="1.5" fill="#d9a62a"/>'
-    # ear
-    g+=sway(f'<path d="M528 186C541 183 550 192 550 205C550 220 546 233 538 240C532 237 529 227 529 215C527 205 524 194 528 186Z" fill="{D2}"/>',531,189,5,2.6,-1)
-    # face
-    g+='<path d="M478 201C482 197 489 198 490 203C489 208 483 209 479 207C477 206 476 203 478 201Z" fill="#11161c"/>'
-    g+='<circle cx="511" cy="199" r="3.3" fill="#11161c"/><circle cx="510" cy="197.8" r="1.05" fill="#fff"/>'
-    g+='<path d="M505 191C509 188 514 188 517 190" fill="none" stroke="#1f2d36" stroke-width="1.6" stroke-linecap="round"/>'
-    g+='<path d="M488 214C494 218 501 217 507 212" fill="none" stroke="#18232b" stroke-width="1.8" stroke-linecap="round"/>'
-    g+='<path d="M494 216C495 223 500 226 504 220C503 217 499 216 494 216Z" fill="#f07a8a"/>'
+def _blink(cx,cy,r,dur,begin):
+    # SMIL blink: eye squashes shut for a moment, then stays open (paused by main.js under reduced motion)
+    vals=f'{r};{r};.5;{r};{r}'
+    return (f'<ellipse cx="{cx}" cy="{cy}" rx="{r-.8}" ry="{r}" fill="#f6e04a">'
+            f'<animate attributeName="ry" values="{vals}" keyTimes="0;.94;.96;.98;1" dur="{dur}s" begin="-{begin}s" repeatCount="indefinite"/></ellipse>')
+
+def sitting_cat():
+    # ---- black cat: upright sitting pose facing the woman (left), S-curve tail (original drawing) ----
+    B='#14121a'; RIM='#3a3550'; IN='#2a2433'
+    rim=f' stroke="{RIM}" stroke-width="1.8" stroke-linejoin="round"'
+    g='<g class="cat">'
+    g+='<ellipse cx="610" cy="358" rx="82" ry="6" fill="#3f7a26" opacity=".35"/>'
+    tail='M672 350C698 354 714 340 704 324C696 310 704 296 710 284C714 276 716 270 714 262'
+    g+=sway(f'<path d="{tail}" fill="none" stroke="{RIM}" stroke-width="15" stroke-linecap="round"/>'
+            f'<path d="{tail}" fill="none" stroke="{B}" stroke-width="11.5" stroke-linecap="round"/>',668,348,7,3.4,0)
+    # body: chest forward, rounded haunch behind
+    g+=(f'<path d="M550 230C532 262 524 308 530 346C531 354 536 358 546 358L666 358C680 358 684 346 678 332C672 298 642 262 608 244C590 234 566 222 550 230Z" fill="{B}"{rim}/>')
+    # haunch + folded hind foot
+    g+=f'<path d="M588 330C586 300 606 282 630 284C656 286 672 308 668 334C665 352 652 358 634 358L608 358C596 352 589 342 588 330Z" fill="#1b1824"{rim}/>'
+    g+=f'<ellipse cx="606" cy="353" rx="22" ry="6" fill="{B}"{rim}/>'
+    # front legs close together + paws
+    g+=f'<path d="M532 300C530 322 530 340 530 352M548 296C548 320 548 338 548 352" fill="none" stroke="{RIM}" stroke-width="1.6" stroke-linecap="round"/>'
+    g+=f'<ellipse cx="531" cy="354" rx="13" ry="5" fill="{B}"{rim}/><ellipse cx="552" cy="355" rx="11" ry="4.5" fill="{B}"{rim}/>'
+    # head with pointed ears
+    g+=f'<path d="M508 202L512 162L534 184C541 183 548 183 555 184L576 164L578 202C580 224 562 238 543 238C524 238 506 224 508 202Z" fill="{B}"{rim}/>'
+    g+=f'<path d="M515 176L531 188L517 196Z" fill="{IN}"/><path d="M572 178L558 188L573 197Z" fill="{IN}"/>'
+    # eyes (blink) with slit pupils, nose, whiskers
+    g+=_blink(525,206,5.4,6.5,1.2)+_blink(556,206,5.4,6.5,1.2)
+    g+=f'<path d="M525 201V211M556 201V211" stroke="{B}" stroke-width="1.8" stroke-linecap="round"/>'
+    g+=f'<path d="M538 218L544 218L541 222Z" fill="#6a4a5a"/>'
+    g+='<path d="M541 222C541 226 536 228 533 226M541 222C541 226 546 228 549 226" fill="none" stroke="#6b6682" stroke-width="1.2" stroke-linecap="round"/>'
+    g+='<path d="M514 222L494 218M514 226L494 228M568 222L588 218M568 226L588 228" stroke="#8a85a0" stroke-width="1" stroke-linecap="round" opacity=".6"/>'
     g+='</g>'
     return g

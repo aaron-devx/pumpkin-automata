@@ -1,7 +1,7 @@
 from lib import *
 from comp import *
 import math, itertools
-from figures import deck_woman, sitting_dog
+from figures import deck_woman, sitting_cat
 _HOUSE_IDS=itertools.count()
 WALL='#4a2c5e'; WALL_DK='#3a2150'; ROOF='#24163a'; TRIM='#6b3f86'; GLOW='#ffcf5a'; GLOW2='#ff9a2e'; STONE='#5a4a6e'
 def _scallops(x0,x1,y0,y1,step=8):
@@ -153,9 +153,9 @@ def build_layers():
     s.add(fan2(s,604,716,32,13,'#e6e05a','#6ea032'))
     s.add(fan2(s,962,714,30,13,'#e6e05a','#6ea032'))
     for x,y in [(650,738),(690,746),(860,744),(920,738),(1000,750),(560,778)]: s.add(tuft(x,y,0.9,'#d5e24f','#a8cc3e'))
-    # same woman + dog as the why scene, scaled down onto the lawn (feet on y~744)
+    # same woman + cat as the why scene, scaled down onto the lawn (feet on y~744)
     s.add(f'<g transform="translate(678 698.4) scale(.12)">{deck_woman()}</g>')
-    s.add(f'<g transform="translate(691 701) scale(.12)">{sitting_dog()}</g>')
+    s.add(f'<g transform="translate(691 701) scale(.12)">{sitting_cat()}</g>')
     cut('island',.16,14)
     # low bats skimming the water
     for i,(x,y,k,dur,ph,rev) in enumerate([(300,712,15,58,0,False),(375,690,8,64,0,False),(1094,708,12,52,0,True),(1252,808,24,46,0,True)]):

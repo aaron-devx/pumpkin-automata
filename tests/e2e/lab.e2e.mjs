@@ -280,6 +280,9 @@ async function main() {
     check('transition table marks start with arrow', !!startRow && startRow.m.includes('start state:→'), JSON.stringify(marks));
     check('transition table marks accept with star', !!acceptRow && acceptRow.m.includes('accept state:*'), JSON.stringify(marks));
 
+    const pets = await cdp.evaluate(`(() => ({ cats: document.querySelectorAll('.hero g.cat').length, whyCats: document.querySelectorAll('g.cat').length, dogs: document.querySelectorAll('.dog, [id*="dog"], [class*="dog"]').length }))()`);
+    check('hero and why scene show the black cat, no dog', pets.cats === 1 && pets.whyCats === 2 && pets.dogs === 0, JSON.stringify(pets));
+
     await cdp.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
     await cdp.send('Page.reload');
     await sleep(2000);

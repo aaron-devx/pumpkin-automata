@@ -2,7 +2,7 @@ from lib import *
 from comp import *
 from hero import house
 from anim import sway, drift, bird as abird, smoke
-from figures import deck_woman, sitting_dog
+from figures import deck_woman, sitting_cat
 import math
 import os as _os
 _HERE=_os.path.dirname(_os.path.abspath(__file__))
@@ -99,7 +99,7 @@ def why_scene():
     s.add(sway(fan2(s,80,404,96,17,'#e6dc58','#2f8a3a',w=0.15),80,404,1.4,4.6,-.6))
     s.add(sway(grassfan(40,410,9,80,-170,-110,5,['#2e8a46','#46a552'],0.1,0.2,21),40,410,2,3.8,-1.4))
     s.add(deck_woman())
-    s.add(sitting_dog())
+    s.add(sitting_cat())
     s.add(jack(752,392))
     for x,y,k in [(338,396,1.3),(397,440,1.2),(485,430,1.1),(1180,430,0.9)]: s.add(tuft(x,y,k,'#d5e24f','#b6d443'))
     s.add(sway(grassfan(830,470,13,120,-170,-10,8,['#1f8a5a','#2fa26a','#47b876','#178050'],0.15,0.3,31),830,470,1.6,4.4,-.9))
