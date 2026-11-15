@@ -126,7 +126,22 @@ async function main() {
       .filter(h => !/^(#|https?:|mailto:|\\/|[\\w./-]+\\.(html|pdf|svg|png)$)/.test(h))`);
     check('no broken in-page links', badLinks.length === 0, JSON.stringify(badLinks));
     const destCount = await cdp.evaluate(`document.querySelectorAll('#cards .card').length`);
-    check('3 destination cards unchanged', destCount === 3, `cards=${destCount}`);
+    check('6 destination problem cards', destCount === 6, `cards=${destCount}`);
+    const staleText = await cdp.evaluate(`/Suffix 01|Contains aba/.test(document.body.textContent)`);
+    check('no stale "Suffix 01" / "Contains aba" text in page', staleText === false, String(staleText));
+    const destMachines = await cdp.evaluate(`(() => {
+      const ids = [...document.getElementById('machine-select').options].map((o) => o.value);
+      return [...document.querySelectorAll('#cards .card')].map((c) => ({ id: c.dataset.machine, input: c.dataset.input, ok: ids.includes(c.dataset.machine) }));
+    })()`);
+    check('every destination card has data-machine resolving to a real machine', destMachines.length === 6 && destMachines.every((d) => d.ok && d.input), JSON.stringify(destMachines));
+    for (const d of destMachines) {
+      const r = await cdp.evaluate(`(async () => {
+        document.querySelector('#cards .card[data-machine="${d.id}"]')?.click();
+        await new Promise((r) => setTimeout(r, 300));
+        return { machine: document.getElementById('machine-select').value, input: document.getElementById('string-input').value, verdict: document.getElementById('lab-verdict').textContent.trim() };
+      })()`);
+      check(`destination card ${d.id} "${d.input}" loads and runs to ACCEPTED`, r.machine === d.id && r.input === d.input && r.verdict.toUpperCase().includes('ACCEPTED'), JSON.stringify(r));
+    }
     const cardCount = await cdp.evaluate(`document.querySelectorAll('#tcards .tcard').length`);
     check('6 example string cards exist', cardCount === 6, `cards=${cardCount}`);
     const dotCount = await cdp.evaluate(`document.querySelectorAll('#tcards .cdots button').length`);

@@ -1,4 +1,4 @@
-# StateStream — AL102 lab (SnapTrips vector skin)
+# Pumpkin Automata — AL102 DFA/NFA Simulator
 
 **Repo:** [`aaron-devx/statestream-al102`](https://github.com/aaron-devx/statestream-al102) · branch **`al102-automata`** for class work, **`master`** for travel-only baseline.
 
