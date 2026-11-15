@@ -275,7 +275,7 @@ async function main() {
       return { n: goes.length, selected, rows: cmp ? cmp.querySelectorAll('tbody tr').length : -1, hasCompare: !!compareBtn };
     })()`);
     check('card 02 Try it selects nfa-ends-aab', concept.selected === 'nfa-ends-aab', JSON.stringify(concept));
-    check('Compare target table has 5 rows', concept.hasCompare && concept.rows === 5, JSON.stringify(concept));
+    check('Compare target table has 3 rows', concept.hasCompare && concept.rows === 3, JSON.stringify(concept));
 
     const marks = await cdp.evaluate(`(async () => {
       const sel = document.getElementById('machine-select') ?? document.querySelector('select');

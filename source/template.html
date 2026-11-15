@@ -172,6 +172,7 @@ button{font:inherit}
 .cmp-table thead th{background:var(--dark-3);color:var(--moon);font-weight:600}
 .cmp-table tbody th{font-weight:500;color:#e9f0f4}
 .cmp-table tbody tr:last-child th,.cmp-table tbody tr:last-child td{border-bottom:0}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .feat p{margin:0;max-width:470px;font-size:15.5px;line-height:22px;color:#e6f6e6;font-weight:300}
 .scene{position:relative;z-index:1;margin-top:clamp(-140px,-6vw,-24px);aspect-ratio:1504/512;overflow:hidden}
 .scene-svg{position:absolute;inset:0;width:100%;height:100%}
@@ -438,13 +439,11 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
   <div class="cmp-wrap" id="dfa-vs-nfa" tabindex="-1">
    <table class="cmp-table">
     <caption>DFA vs NFA</caption>
-    <thead><tr><th scope="col">Property</th><th scope="col">DFA</th><th scope="col">NFA</th></tr></thead>
+    <thead><tr><th scope="col"><span class="sr-only">Property</span></th><th scope="col">DFA</th><th scope="col">NFA</th></tr></thead>
     <tbody>
-     <tr><th scope="row">Start state</th><td>1</td><td>1</td></tr>
-     <tr><th scope="row">Next state per symbol</th><td>Exactly 1</td><td>0, 1, or many</td></tr>
-     <tr><th scope="row">&epsilon;-moves</th><td>No</td><td>Allowed</td></tr>
-     <tr><th scope="row">Accept states</th><td>1 or more</td><td>1 or more</td></tr>
-     <tr><th scope="row">Processing</th><td>One path</td><td>Many paths at once</td></tr>
+     <tr><th scope="row">Next step</th><td>Always 1</td><td>0, 1, or many</td></tr>
+     <tr><th scope="row">Free moves (&epsilon;)</th><td>No</td><td>Yes</td></tr>
+     <tr><th scope="row">Paths</th><td>One path</td><td>Many paths at once</td></tr>
     </tbody>
    </table>
   </div>
