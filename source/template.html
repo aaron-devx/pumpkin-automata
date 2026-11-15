@@ -265,10 +265,6 @@ table.trace thead th{position:sticky;top:0;background:var(--paper);z-index:1}
 .card-go:focus-visible::after{outline:3px solid var(--pumpkin);outline-offset:-3px}
 .cnav{display:flex;justify-content:center;align-items:center;gap:28px;margin-top:64px}
 .cdots{display:flex;justify-content:center;gap:24px}
-.cplay{all:unset;box-sizing:border-box;width:32px;height:32px;border-radius:50%;border:2px solid var(--navy);cursor:pointer;position:relative;display:grid;place-items:center}
-.cplay::before{content:"";width:10px;height:12px;border-left:3px solid var(--navy);border-right:3px solid var(--navy);box-sizing:border-box}
-.cplay[aria-pressed="true"]::before{width:0;height:0;border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent var(--navy);margin-left:3px}
-.cplay:focus-visible{outline:3px solid var(--pumpkin);outline-offset:3px}
 .cdots button{all:unset;box-sizing:border-box;width:14px;height:14px;border-radius:50%;background:var(--dot);cursor:pointer;position:relative;transition:background .3s,transform .3s}
 .cdots button::before{content:"";position:absolute;inset:-12px}
 .cdots button[aria-current="true"]{background:var(--navy);transform:scale(1.15)}
@@ -512,7 +508,7 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
   <p class="lead-c" data-reveal style="max-width:470px">Strings from the slides. Click a card to run it.</p>
   <div class="carousel" id="tcards" data-reveal role="region" aria-roledescription="carousel" aria-label="Example strings">
    <div class="cview"><div class="ctrack" aria-live="off">{{TCARDS}}</div></div>
-   <div class="cnav"><div class="cdots"><button type="button" aria-label="Page 1 of 3" aria-current="true"></button><button type="button" aria-label="Page 2 of 3"></button><button type="button" aria-label="Page 3 of 3"></button></div><button type="button" class="cplay" aria-pressed="false" aria-label="Pause autoplay"></button></div>
+   <div class="cnav"><div class="cdots"><button type="button" aria-label="Page 1 of 3" aria-current="true"></button><button type="button" aria-label="Page 2 of 3"></button><button type="button" aria-label="Page 3 of 3"></button></div></div>
   </div>
  </div>
 </section>

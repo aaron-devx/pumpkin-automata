@@ -155,8 +155,7 @@
   var dots = Array.prototype.slice.call(root.querySelectorAll('.cdots button'));
   var INTERVAL_MS = 5000;
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var playBtn = root.querySelector('.cplay');
-  var index = 0, timer = null, held = false, offscreen = false, paused = false;
+  var index = 0, timer = null, held = false, offscreen = false;
 
   function show(i) {
     index = (i + pages.length) % pages.length;
@@ -172,24 +171,14 @@
   function stop() { if (timer) { clearInterval(timer); timer = null; } }
   function start() {
     stop();
-    if (reduce || paused || held || offscreen || document.hidden) return;
+    if (reduce || held || offscreen || document.hidden) return;
     timer = setInterval(function () { show(index + 1); }, INTERVAL_MS);
   }
   function hold(on) { held = on; start(); }
 
   dots.forEach(function (d, n) { d.addEventListener('click', function () { show(n); start(); }); });
-  // Visible pause/play toggle (WCAG 2.2.2); hidden when reduced motion already stops autoplay.
-  if (playBtn) {
-    playBtn.hidden = reduce;
-    playBtn.addEventListener('click', function () {
-      paused = !paused;
-      playBtn.setAttribute('aria-pressed', paused ? 'true' : 'false');
-      start();
-    });
-  }
   // Pause only for keyboard focus; mouse clicks and hover keep autoplay running.
-  // The toggle is excluded so focusing it does not mask its own state.
-  root.addEventListener('focusin', function (e) { if (e.target !== playBtn && e.target.matches(':focus-visible')) hold(true); });
+  root.addEventListener('focusin', function (e) { if (e.target.matches(':focus-visible')) hold(true); });
   root.addEventListener('focusout', function () { hold(false); });
   document.addEventListener('visibilitychange', start);
   if ('IntersectionObserver' in window) {
