@@ -198,6 +198,33 @@ async function main() {
     check('active trace row stays inside trace panel while stepping', fit.inside.every(Boolean), JSON.stringify(fit.inside));
     check('stepping does not scroll the page', fit.y0 === fit.y1, JSON.stringify({ y0: fit.y0, y1: fit.y1 }));
 
+    const concept = await cdp.evaluate(`(async () => {
+      const goes = [...document.querySelectorAll('.feat-go')];
+      const nfaBtn = goes.find((b) => b.dataset.machine === 'nfa-ends-aab');
+      if (nfaBtn) nfaBtn.click();
+      await new Promise((r) => setTimeout(r, 300));
+      const selected = document.getElementById('machine-select')?.value ?? document.querySelector('select')?.value;
+      const cmp = document.querySelector('#dfa-vs-nfa table');
+      const compareBtn = goes.find((b) => b.dataset.scroll === 'dfa-vs-nfa');
+      return { n: goes.length, selected, rows: cmp ? cmp.querySelectorAll('tbody tr').length : -1, hasCompare: !!compareBtn };
+    })()`);
+    check('card 02 Try it selects nfa-ends-aab', concept.selected === 'nfa-ends-aab', JSON.stringify(concept));
+    check('Compare target table has 5 rows', concept.hasCompare && concept.rows === 5, JSON.stringify(concept));
+
+    const marks = await cdp.evaluate(`(async () => {
+      const sel = document.getElementById('machine-select') ?? document.querySelector('select');
+      sel.value = 'dfa-ends-10';
+      sel.dispatchEvent(new Event('change'));
+      await new Promise((r) => setTimeout(r, 200));
+      const rows = [...document.querySelectorAll('table.delta tr')].slice(1);
+      const lab = (tr) => [...tr.querySelectorAll('td:first-child [aria-label]')].map((e) => e.getAttribute('aria-label') + ':' + e.textContent);
+      return rows.map((tr) => ({ s: tr.cells[0].textContent, m: lab(tr) }));
+    })()`);
+    const startRow = marks.find((r) => r.s.startsWith('→'));
+    const acceptRow = marks.find((r) => r.s.includes('*'));
+    check('transition table marks start with arrow', !!startRow && startRow.m.includes('start state:→'), JSON.stringify(marks));
+    check('transition table marks accept with star', !!acceptRow && acceptRow.m.includes('accept state:*'), JSON.stringify(marks));
+
     await cdp.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
     await cdp.send('Page.reload');
     await sleep(2000);

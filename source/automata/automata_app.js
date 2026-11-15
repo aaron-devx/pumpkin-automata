@@ -66,6 +66,12 @@ function renderSamples(m) {
   }
 }
 
+function stateMarks(m, q) {
+  const start = q === m.start ? '<span class="mark" role="img" aria-label="start state">→</span>' : '';
+  const accept = m.accept.includes(q) ? '<span class="mark" role="img" aria-label="accept state">*</span>' : '';
+  return `${start}${accept}`;
+}
+
 function renderTransitionTable(m) {
   const wrap = els.table();
   if (!wrap) return;
@@ -78,8 +84,7 @@ function renderTransitionTable(m) {
         if (!v) return '∅';
         return Array.isArray(v) ? `{${v.join(',')}}` : v;
       });
-      const mark = q === m.start ? '→' : m.accept.includes(q) ? '*' : '';
-      return `<tr><td>${mark}${q}</td>${cells.map((c) => `<td>${c}</td>`).join('')}</tr>`;
+      return `<tr><td>${stateMarks(m, q)}${q}</td>${cells.map((c) => `<td>${c}</td>`).join('')}</tr>`;
     })
     .join('');
   wrap.innerHTML = `<table class="delta">${hdr}${rows}</table>`;
@@ -268,6 +273,14 @@ function renderTrace(machine, result) {
   });
 }
 
+function scrollToId(id, focus = false) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  if (focus) el.focus({ preventScroll: true });
+}
+
 function execute(scrollToLab) {
   const m = getMachine(els.machine()?.value ?? MACHINES[0].id);
   const input = els.input()?.value ?? '';
@@ -301,9 +314,7 @@ function execute(scrollToLab) {
   renderTrace(m, result);
   highlightStep();
 
-  if (scrollToLab) {
-    document.getElementById('lab')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
+  if (scrollToLab) scrollToId('lab');
 }
 
 function selectMachine(id) {
@@ -314,7 +325,7 @@ function selectMachine(id) {
 }
 
 function bindCards() {
-  document.querySelectorAll('.card[data-machine], .tcard[data-machine]').forEach((card) => {
+  document.querySelectorAll('.card[data-machine], .tcard[data-machine], .feat-go[data-machine]').forEach((card) => {
     card.addEventListener('click', () => {
       const sel = els.machine();
       const input = els.input();
@@ -327,9 +338,16 @@ function bindCards() {
   });
 }
 
+function bindScrollButtons() {
+  document.querySelectorAll('[data-scroll]').forEach((btn) => {
+    btn.addEventListener('click', () => scrollToId(btn.dataset.scroll, true));
+  });
+}
+
 function bind() {
   fillMachines();
   bindCards();
+  bindScrollButtons();
   const sel = els.machine();
   sel?.addEventListener('change', () => selectMachine(sel.value));
   if (sel) selectMachine(sel.value);

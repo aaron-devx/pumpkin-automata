@@ -154,6 +154,16 @@ button{font:inherit}
 .feat .tx::before,.feat .tx::after{content:"";position:absolute;left:-14px;width:28px;height:28px;border-radius:50%;background:var(--notch)}
 .feat .tx::before{top:-14px}.feat .tx::after{bottom:-14px}
 .feat h4{font-family:'Plus Jakarta Sans';font-weight:500;font-size:clamp(24px,2.06vw,31px);letter-spacing:-.04em;margin:0 0 6px;line-height:1.16;color:#fff}
+.feat-go{margin-top:14px;height:40px;padding:0 22px;border:0;border-radius:20px;background:var(--navy);color:#fff;font:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:transform .3s,box-shadow .3s}
+.feat-go:hover{transform:translateY(-2px);box-shadow:0 10px 22px -10px rgba(0,0,0,.6)}
+.cmp{position:relative;z-index:2;padding-top:clamp(40px,6vw,72px);padding-bottom:clamp(48px,9vw,160px)}
+.cmp-wrap{outline-offset:6px}
+.cmp-table{width:100%;border-collapse:collapse;background:var(--dark-2);border-radius:18px;overflow:hidden;color:#fff;font-size:15px}
+.cmp-table caption{caption-side:top;text-align:left;font-family:'Plus Jakarta Sans';font-weight:500;font-size:clamp(24px,2.06vw,31px);letter-spacing:-.04em;color:var(--moon);padding:0 0 16px}
+.cmp-table th,.cmp-table td{padding:14px 18px;text-align:left;border-bottom:1px solid rgba(244,233,193,.14);vertical-align:top}
+.cmp-table thead th{background:var(--dark-3);color:var(--moon);font-weight:600}
+.cmp-table tbody th{font-weight:500;color:#e9f0f4}
+.cmp-table tbody tr:last-child th,.cmp-table tbody tr:last-child td{border-bottom:0}
 .feat p{margin:0;max-width:470px;font-size:15.5px;line-height:22px;color:#e6f6e6;font-weight:300}
 .scene{position:relative;z-index:1;margin-top:clamp(-140px,-6vw,-24px);aspect-ratio:1504/512;overflow:hidden}
 .scene-svg{position:absolute;inset:0;width:100%;height:100%}
@@ -341,6 +351,8 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
   .feat .num::before{border-width:16px 16px 0 0}
   .feat .tx{padding:22px 20px 20px 24px}
   .feat p{font-size:14.5px}
+  .cmp-table{font-size:14px}
+  .cmp-table th,.cmp-table td{padding:11px 12px}
   .flinks{grid-template-columns:repeat(2,max-content);column-gap:56px}
   .plan ul{line-height:32px}
   .copy{font-size:14px}
@@ -394,7 +406,6 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
  <img class="plant-s deco-sway" src="svg/plant_small.svg" alt="" aria-hidden="true">
  <div class="container">
   <h2 class="h" data-reveal>Slide <span class="sw" style="--l:-17%;--r:-6%">problems</span><br>from Week 7<br>and 10</h2>
-  <p class="sub" data-reveal>Same card layout — labels are languages from the PDFs, not destinations.</p>
   <div data-reveal><a class="btn-o" href="#lab"><svg width="22" height="20" viewBox="0 0 22 20" fill="none" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"><path d="M2 8h4l9-5v14l-9-5H2z"/><path d="M6 12l2 6h3l-2-6M18 7c1.5 1 1.5 5 0 6M20 4.5c3 2 3 9 0 11"/></svg>Open trace lab</a></div>
   <div class="cards" id="cards">{{CARDS}}</div>
   <div class="dest-hint" aria-hidden="true"><i></i>Swipe to explore</div>
@@ -409,9 +420,24 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
    <div data-reveal><a class="btn-o" href="#packages">See the 3 steps</a></div>
   </div>
   <div class="feats">
-   <div class="feat" data-reveal="right"><div class="num">01</div><div class="tx"><h4>Deterministic</h4><p>One symbol, one move. Easy to trace — what Week 7 calls a DFA.</p></div></div>
-   <div class="feat" data-reveal="right"><div class="num">02</div><div class="tx"><h4>Nondeterministic</h4><p>Zero, one, or many moves. Accept if some branch reaches an accepting state.</p></div></div>
-   <div class="feat" data-reveal="right"><div class="num">03</div><div class="tx"><h4>Same power</h4><p>Every NFA has an equivalent DFA. This lab shows the walk, not the conversion proof.</p></div></div>
+   <div class="feat" data-reveal="right"><div class="num">01</div><div class="tx"><h4>DFA</h4><p>One next state for each state and symbol. The string takes one path, then accepts or rejects at the end. Like a road sign: &ldquo;Turn Right&rdquo; is one instruction.</p><button type="button" class="feat-go" data-machine="dfa-ends-10" data-input="0110" aria-label="Try it: load the DFA example in the trace lab">Try it</button></div></div>
+   <div class="feat" data-reveal="right"><div class="num">02</div><div class="tx"><h4>NFA</h4><p>May have 0, 1, or many next states, and may use &epsilon;. Accepts if at least one path ends in an accept state.</p><button type="button" class="feat-go" data-machine="nfa-ends-aab" data-input="baab" aria-label="Try it: load the NFA example in the trace lab">Try it</button></div></div>
+   <div class="feat" data-reveal="right"><div class="num">03</div><div class="tx"><h4>Same power</h4><p>Every NFA has an equivalent DFA. Both recognize the same languages.</p><button type="button" class="feat-go" data-scroll="dfa-vs-nfa" aria-label="Compare DFA and NFA in the table below">Compare</button></div></div>
+  </div>
+ </div>
+ <div class="container cmp" data-reveal>
+  <div class="cmp-wrap" id="dfa-vs-nfa" tabindex="-1">
+   <table class="cmp-table">
+    <caption>DFA vs NFA</caption>
+    <thead><tr><th scope="col">Property</th><th scope="col">DFA</th><th scope="col">NFA</th></tr></thead>
+    <tbody>
+     <tr><th scope="row">Start state</th><td>1</td><td>1</td></tr>
+     <tr><th scope="row">Next state per symbol</th><td>Exactly 1</td><td>0, 1, or many</td></tr>
+     <tr><th scope="row">&epsilon;-moves</th><td>No</td><td>Allowed</td></tr>
+     <tr><th scope="row">Accept states</th><td>1 or more</td><td>1 or more</td></tr>
+     <tr><th scope="row">Processing</th><td>One path</td><td>Many paths at once</td></tr>
+    </tbody>
+   </table>
   </div>
  </div>
  <div class="scene">
@@ -423,7 +449,7 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
 <section class="pricing" id="packages">
  <div class="container">
   <h2 class="h" data-reveal>Three <span class="sw" style="--l:-2%;--r:-2%">steps</span><br>per run</h2>
-  <p class="lead-c" data-reveal>Pick machine → type string → scrub the trace. Middle card is the featured path.</p>
+  <p class="lead-c" data-reveal>Pick machine → type string → scrub the trace.</p>
   <div class="plans" id="plans">{{PLANS}}</div>
  </div>
 </section>
