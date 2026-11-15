@@ -173,6 +173,24 @@ async function main() {
     })()`);
     check('clicking a card sets lab machine + input and runs', cardRun.machine === cardRun.want.id && cardRun.input === cardRun.want.s && cardRun.verdict !== '', JSON.stringify(cardRun));
 
+    const heroCopy = await cdp.evaluate(`({ eyebrow: document.querySelector('.hero .eyebrow')?.textContent.trim(), lead: document.querySelector('.hero .lead')?.textContent.trim() })`);
+    check('hero eyebrow reads "DFA & NFA Simulator"', heroCopy.eyebrow === 'DFA & NFA Simulator', JSON.stringify(heroCopy));
+    check('hero subtitle is the new copy', heroCopy.lead === 'Pick a slide problem, type a string, watch each step.', JSON.stringify(heroCopy));
+
+    const focusAfterRun = await cdp.evaluate(`(async () => {
+      document.getElementById('string-input').value = '10';
+      document.getElementById('run-hero').click();
+      await new Promise((r) => setTimeout(r, 1200));
+      return document.activeElement?.id ?? document.activeElement?.tagName;
+    })()`);
+    check('Run focuses the trace heading', focusAfterRun === 'lab-title', String(focusAfterRun));
+    const focusAfterEdit = await cdp.evaluate(`(async () => {
+      document.querySelector('.edit-string')?.click();
+      await new Promise((r) => setTimeout(r, 1200));
+      return document.activeElement?.id ?? document.activeElement?.tagName;
+    })()`);
+    check('Edit string focuses the input', focusAfterEdit === 'string-input', String(focusAfterEdit));
+
     await cdp.send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 800, deviceScaleFactor: 1, mobile: false });
     await sleep(300);
     await cdp.evaluate(runCase({ id: 'dfa-ends-10', s: '1010101010' }));

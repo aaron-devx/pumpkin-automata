@@ -314,7 +314,7 @@ function execute(scrollToLab) {
   renderTrace(m, result);
   highlightStep();
 
-  if (scrollToLab) scrollToId('lab');
+  if (scrollToLab) scrollToId('lab-title', true);
 }
 
 function selectMachine(id) {
