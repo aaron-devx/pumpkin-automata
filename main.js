@@ -155,7 +155,7 @@
   var dots = Array.prototype.slice.call(root.querySelectorAll('.cdots button'));
   var INTERVAL_MS = 5000;
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var index = 0, timer = null, held = false, offscreen = false;
+  var index = 0, timer = null, held = false, offscreen = false, stopped = false;
 
   function show(i) {
     index = (i + pages.length) % pages.length;
@@ -171,13 +171,13 @@
   function stop() { if (timer) { clearInterval(timer); timer = null; } }
   function start() {
     stop();
-    if (reduce || held || offscreen || document.hidden) return;
+    if (reduce || stopped || held || offscreen || document.hidden) return;
     timer = setInterval(function () { show(index + 1); }, INTERVAL_MS);
   }
   function hold(on) { held = on; start(); }
 
-  dots.forEach(function (d, n) { d.addEventListener('click', function () { show(n); start(); }); });
-  // Pause only for keyboard focus; mouse clicks and hover keep autoplay running.
+  // First dot click stops autoplay for good (WCAG 2.2.2); keyboard focus pauses it.
+  dots.forEach(function (d, n) { d.addEventListener('click', function () { show(n); stopped = true; stop(); }); });
   root.addEventListener('focusin', function (e) { if (e.target.matches(':focus-visible')) hold(true); });
   root.addEventListener('focusout', function () { hold(false); });
   document.addEventListener('visibilitychange', start);

@@ -171,7 +171,7 @@ async function main() {
     check('clicking a dot goes to that page', dot2 === 2, `dot=${dot2}`);
     await sleep(AUTO_ADVANCE_WAIT_MS);
     const dot3 = await cdp.evaluate(activeDot);
-    check('autoplay keeps going after dot click', dot3 === 0, `dot=${dot3}`);
+    check('autoplay stops after dot click', dot3 === 2, `dot=${dot3}`);
     const cardRun = await cdp.evaluate(`(() => {
       const card = document.querySelector('#tcards .cpage[aria-hidden="false"] .tcard');
       card.click();
