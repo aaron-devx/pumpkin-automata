@@ -1,7 +1,7 @@
 from lib import *
 from comp import *
 from hero import house
-from anim import sway, drift, bird as abird, smoke
+from anim import sway, drift, bat, smoke
 from figures import deck_woman, sitting_cat
 import math
 import os as _os
@@ -111,15 +111,15 @@ def why_scene():
 
 def footer_art():
     s=S(1504,512)
-    sky=s.lg('fsky',[(0,'#ffffff'),(.5,'#e6f6fd'),(1,'#c9ecfb')],0,0,0,400,1)
+    sky=s.lg('fsky',[(0,'#1a6fb8'),(.6,'#3fa0e0'),(1,'#7cc8ef')],0,0,0,420,1)
     s.p('M0 0H1504V512H0Z',sky)
-    cl=lambda x,y,w,h,b: f'<path d="{streak(x,y,w,h,b)}" fill="#ffffff"/>'
+    s.add(f'<g transform="translate(640 0)">{night_sky(s)}</g>')
+    cl=lambda x,y,w,h,b: f'<path d="{streak(x,y,w,h,b)}" fill="#ffffff" opacity=".22"/>'
     s.add(drift(cl(190,290,300,40,((.3,.15,1),(.55,.15,.6))),190,490,190))
     s.add(drift(cl(920,268,470,44,((.2,.1,.6),(.42,.12,1),(.66,.1,.7))),920,1390,230))
     s.add(drift(cl(400,170,260,26,((.4,.2,1),)),400,660,300,phase=.5))
-    s.add(drift(f'<path d="{streak(1100,120,300,22,((.5,.25,1),))}" fill="#ffffff" opacity=".7"/>',1100,1400,340,phase=.3))
-    for i,(x,y,k) in enumerate([(490,250,7),(660,140,6),(830,140,7),(1020,130,8),(1090,210,8),(960,275,8),(520,375,12),(1080,295,10)]):
-        s.add(abird(x,y,k*1.2,'#ffffff' if y>250 else '#bfe3f4',dur=60+i*9,rev=i%3==1,seed=i+3,flap=.5+i%3*.07))
+    for i,(x,y,k,dur,ph,rev) in enumerate([(520,250,7,70,0,False),(820,150,6,84,.3,True),(1000,230,8,76,.6,False),(640,330,5,96,.4,True)]):
+        s.add(bat(x,y,k*2,dur=dur,phase=ph,rev=rev,seed=i,flap=.18+i%3*.04))
     # distant blue left
     s.p(smooth([(240,400),(300,340),(360,330),(420,345),(500,400)],False)+'Z','#3aa6d8')
     s.p(smooth([(980,400),(1040,350),(1110,345),(1180,360),(1240,400)],False)+'Z','#4fb8de')
@@ -144,25 +144,13 @@ def footer_art():
     s.p(smooth([(0,420),(200,400),(420,412),(620,430),(800,440),(1000,430),(1200,420),(1504,430)],False)+'L1504 512L0 512Z',md)
     s.p(smooth([(300,470),(520,450),(760,452),(960,462),(1180,472),(1000,480),(700,474),(450,480)],True),'#b2d455',opacity=.7)
     s.p(smooth([(560,430),(700,424),(860,440),(760,446)],True),'#a8d04e',opacity=.8)
-    # orange grass patch near house
-    s.p(smooth([(870,450),(900,430),(960,432),(1010,440),(1000,456),(920,458)],True),'#f2b25c')
-    s.add(sway(grassfan(940,452,14,26,-160,-20,3,['#f5c46a','#e89a4a'],0.1,0.3,41),940,452,3,3.4,-1))
-    # house (long)
-    k=1.0; ox,oy=1006,467
-    h=''
-    h+=f'<path d="{poly([(ox+40,oy-140),(1388,oy-140),(1388,oy-96),(ox+110,oy-96)])}" fill="#1f56b8"/>'
-    h+=f'<path d="{poly([(ox+102,oy-100),(1388,oy-100),(1388,oy),(ox+102,oy)])}" fill="#2f86de"/>'
-    h+=f'<path d="{poly([(ox+102,oy-100),(1388,oy-100),(1388,oy-92),(ox+102,oy-92)])}" fill="#1a4ea8"/>'
-    gl=s.lg('fgl',[(0,'#f4fcff'),(1,'#bde4fb')],0,0,1,1)
-    h+=f'<path d="{poly([(ox+112,oy-92),(ox+230,oy-60),(ox+230,oy-6),(ox+112,oy-6)])}" fill="{gl}"/>'
-    for i in range(1,6): xx=ox+112+i*20; h+=f'<path d="M{xx} {oy-92+i*5.4}V{oy-6}" stroke="#2a6fc8" stroke-width="3"/>'
-    h+=f'<path d="{poly([(ox,oy),(ox,oy-86),(ox+52,oy-146),(ox+108,oy-86),(ox+108,oy)])}" fill="#3a8fe8"/>'
-    h+=f'<path d="{poly([(ox-4,oy-84),(ox+52,oy-150),(ox+112,oy-84),(ox+106,oy-84),(ox+52,oy-140),(ox+2,oy-84)])}" fill="#1a4ea8"/>'
-    h+=f'<circle cx="{ox+56}" cy="{oy-100}" r="8" fill="#eaf6ff" stroke="#1a4ea8" stroke-width="2"/><path d="M{ox+48} {oy-100}h16M{ox+56} {oy-108}v16" stroke="#1a4ea8" stroke-width="2"/>'
-    h+=f'<path d="M{ox+40} {oy}V{oy-40}H{ox+62}V{oy}Z" fill="#1a4ea8"/>'
-    s.add(h)
-    s.add(fan2(s,1300,472,46,13,'#f6dc4a','#d0a83a'))
-    s.p(smooth([(ox-10,467),(ox-6,420),(ox+2,380),(ox+12,368),(ox+20,400),(ox+18,467)],True),'#9cc943')
+    # haunted house on the meadow, smoke from the chimney
+    k,ox,oy=.62,1050,462
+    s.raw_def('<radialGradient id="puff"><stop offset="0" stop-color="#ffffff" stop-opacity=".95"/><stop offset=".55" stop-color="#f4fbff" stop-opacity=".7"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>')
+    s.add(smoke(ox+222*k,oy-236*k,6,8.5,'url(#puff)',6,120,40,2.2))
+    s.add(house(s,ox,oy,k,door=True))
+    for cx,by in [(1000,470),(1236,468)]: s.add(_jack(cx,by))
+    s.add(jack(930,478))
     # tree top-left
     for d,w in [('M-10 300C40 250 60 180 70 120C76 90 90 70 110 60',8),('M30 260C60 220 80 170 120 130',5),('M-10 200C20 170 30 140 30 110',5)]:
         s.p(d,'none',stroke='#165f4f',stroke_width=w,stroke_linecap='round')
