@@ -93,32 +93,91 @@ function nodePos(m, id) {
   return { id, x: 40 + i * 72, y: 70 };
 }
 
-function edgePath(x1, y1, x2, y2) {
-  const mx = (x1 + x2) / 2;
-  const my = (y1 + y2) / 2 - 18;
-  return `M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`;
+const NODE_R = 18;
+const ACC_R = 22;
+const LOOP_RISE = 34;
+const LOOP_HALF = 14;
+const ADJ_BEND = 36;
+const LONG_BEND_MAX = 100;
+const LONG_BEND_RATIO = 0.45;
+const LABEL_GAP = 10;
+const ARROW_PAD = 4;
+const COLOR_IDLE = '#94a8b5';
+const COLOR_HOT = '#f58a45';
+
+function groupEdges(m) {
+  const map = new Map();
+  for (const { from, to, sym } of layoutEdges(m)) {
+    const k = `${from}|${to}`;
+    const cur = map.get(k) ?? { from, to, syms: [] };
+    map.set(k, { ...cur, syms: [...cur.syms, sym] });
+  }
+  return [...map.values()];
+}
+
+function radiusOf(m, id) {
+  return m.accept.includes(id) ? ACC_R + 5 : NODE_R;
+}
+
+function loopGeometry(m, id, h) {
+  const { x, y } = nodePos(m, id);
+  const r = radiusOf(m, id);
+  const dir = y <= h / 2 ? -1 : 1;
+  const y0 = y + dir * r;
+  const yc = y0 + dir * LOOP_RISE * 1.35;
+  return {
+    d: `M ${x - LOOP_HALF} ${y0} C ${x - LOOP_HALF * 2.2} ${yc}, ${x + LOOP_HALF * 2.2} ${yc}, ${x + LOOP_HALF} ${y0}`,
+    end: { x: x + LOOP_HALF, y: y0 },
+    lx: x,
+    ly: y0 + dir * (LOOP_RISE * 1.0 + LABEL_GAP) + 4,
+  };
+}
+
+function curveGeometry(m, from, to) {
+  const a = nodePos(m, from);
+  const b = nodePos(m, to);
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const len = Math.hypot(dx, dy) || 1;
+  const nx = dy / len;
+  const ny = -dx / len;
+  const isLong = len > 150;
+  const bend = isLong ? Math.min(LONG_BEND_MAX, len * LONG_BEND_RATIO) : ADJ_BEND;
+  const cx = (a.x + b.x) / 2 + nx * bend;
+  const cy = (a.y + b.y) / 2 + ny * bend;
+  const tx = b.x - cx;
+  const ty = b.y - cy;
+  const tl = Math.hypot(tx, ty) || 1;
+  const pad = radiusOf(m, to) + ARROW_PAD;
+  const ex = b.x - (tx / tl) * pad;
+  const ey = b.y - (ty / tl) * pad;
+  const sx = a.x + ((cx - a.x) / (Math.hypot(cx - a.x, cy - a.y) || 1)) * radiusOf(m, from);
+  const sy = a.y + ((cy - a.y) / (Math.hypot(cx - a.x, cy - a.y) || 1)) * radiusOf(m, from);
+  const mx = 0.25 * sx + 0.5 * cx + 0.25 * ex;
+  const my = 0.25 * sy + 0.5 * cy + 0.25 * ey;
+  return { d: `M ${sx} ${sy} Q ${cx} ${cy} ${ex} ${ey}`, lx: mx + nx * LABEL_GAP, ly: my + ny * LABEL_GAP + 4 };
+}
+
+function arrowMarker(id, color) {
+  return `<marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="${color}"/></marker>`;
 }
 
 function renderDiagram(m, active, prev, hotChar) {
   const svg = els.diagram();
   if (!svg) return;
-  const edges = layoutEdges(m);
   const w = m.layout?.width ?? 420;
   const h = m.layout?.height ?? 160;
-  const edgeSvg = edges
-    .map(({ from, to, sym }) => {
-      const a = nodePos(m, from);
-      const b = nodePos(m, to);
+  const edgeSvg = groupEdges(m)
+    .map(({ from, to, syms }) => {
+      const loop = from === to;
       const on =
-        hotChar === sym &&
-        ((prev.includes(from) && active.includes(to)) ||
-          (from === to && active.includes(from) && prev.includes(from)));
-      const stroke = on ? '#f58a45' : '#94a8b5';
+        syms.includes(hotChar) &&
+        ((prev.includes(from) && active.includes(to)) || (loop && active.includes(from) && prev.includes(from)));
+      const geo = loop ? loopGeometry(m, from, h) : curveGeometry(m, from, to);
+      const stroke = on ? COLOR_HOT : COLOR_IDLE;
       const sw = on ? 3.2 : 1.6;
-      const d = edgePath(a.x, a.y, b.x, b.y);
-      const lx = (a.x + b.x) / 2;
-      const ly = (a.y + b.y) / 2 - 22;
-      return `<path d="${d}" fill="none" stroke="${stroke}" stroke-width="${sw}"/><text x="${lx}" y="${ly}" text-anchor="middle" font-size="11" fill="${on ? '#f58a45' : '#5a6b75'}" font-family="Poppins,sans-serif">${sym}</text>`;
+      const mk = on ? 'url(#ah-hot)' : 'url(#ah-idle)';
+      return `<path d="${geo.d}" fill="none" stroke="${stroke}" stroke-width="${sw}" marker-end="${mk}"/><text x="${geo.lx}" y="${geo.ly}" text-anchor="middle" font-size="11" fill="${on ? COLOR_HOT : '#5a6b75'}" font-family="Poppins,sans-serif">${syms.join(',')}</text>`;
     })
     .join('');
   const nodes = machineStates(m)
@@ -126,15 +185,16 @@ function renderDiagram(m, active, prev, hotChar) {
       const { x, y } = nodePos(m, id);
       const on = active.includes(id);
       const acc = m.accept.includes(id);
-      const r = acc ? 22 : 18;
+      const r = acc ? ACC_R : NODE_R;
       const fill = on ? '#f58a45' : acc ? '#55b45c' : '#e9f7ff';
       const stroke = on ? '#0d2230' : '#14425b';
       const ring = acc ? `<circle cx="${x}" cy="${y}" r="${r + 5}" fill="none" stroke="#55b45c" stroke-width="2"/>` : '';
-      return `<g>${ring}<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="2"/><text x="${x}" y="${y + 4}" text-anchor="middle" font-size="12" fill="#0d2230" font-family="Poppins,sans-serif">${id}</text></g>`;
+      const entry = id === m.start ? `<path d="M ${x - r - 26} ${y} L ${x - r - 4} ${y}" stroke="${COLOR_IDLE}" stroke-width="1.6" marker-end="url(#ah-idle)"/>` : '';
+      return `<g>${entry}${ring}<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="2"/><text x="${x}" y="${y + 4}" text-anchor="middle" font-size="12" fill="#0d2230" font-family="Poppins,sans-serif">${id}</text></g>`;
     })
     .join('');
   svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-  svg.innerHTML = `${edgeSvg}${nodes}`;
+  svg.innerHTML = `<defs>${arrowMarker('ah-idle', COLOR_IDLE)}${arrowMarker('ah-hot', COLOR_HOT)}</defs>${edgeSvg}${nodes}`;
 }
 
 function syncStepControls(max) {

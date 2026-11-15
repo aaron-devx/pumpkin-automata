@@ -127,11 +127,11 @@ export const MACHINES = [
     },
     layout: {
       width: 320,
-      height: 160,
+      height: 245,
       nodes: [
-        { id: 'q0', x: 60, y: 80 },
-        { id: 'q1', x: 200, y: 45 },
-        { id: 'qd', x: 200, y: 120 },
+        { id: 'q0', x: 70, y: 125 },
+        { id: 'q1', x: 220, y: 100 },
+        { id: 'qd', x: 220, y: 172 },
       ],
     },
     samples: [
