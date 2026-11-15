@@ -32,20 +32,38 @@ STAR='<svg width="30" height="29" viewBox="0 0 24 23"><path d="M12 1l3.1 6.6 7.2
 WAVE='<svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="10" fill="#1f5fe0"/><path d="M2 9c3-2 6 1 9-1s6-2 9 0M2 13c3-2 6 1 9-1s6-2 9 0M4 17c3-2 5 1 7 0s5-2 7 0" stroke="#fff" stroke-width="1.6" fill="none"/></svg>'
 PIN='<svg width="14" height="16" viewBox="0 0 14 16"><path d="M7 15s5.5-5 5.5-9A5.5 5.5 0 0 0 1.5 6c0 4 5.5 9 5.5 9z" fill="#22c1c3"/><circle cx="7" cy="6" r="2" fill="#fff"/></svg>'
 def cards():
-    # (art, title, kind, sigma, slide cite, machine id, accept string)
+    # (art, title, kind, letters, front question, back explanation, yes, no, slide cite, machine id, accept string)
     C=[
-        ('card1','Ends with 10','DFA','Σ={0,1}','Week 7 cont. P2','dfa-ends-10','10'),
-        ('card2','Ends with aab','NFA','Σ={a,b}','Week 10 p7 Q2','nfa-ends-aab','baab'),
-        ('card3','Contains bab','DFA','Σ={a,b}','Week 7 cont. P3','dfa-contains-bab','bab'),
-        ('card1','Begins with 0','DFA','Σ={0,1}','Week 7 cont. P1','dfa-begins-0','010'),
-        ('card2','a then b*','DFA','Σ={a,b}','Slide 3 · accept B','dfa-a-then-bstar','abbb'),
-        ('card3','NFA slide A,B,C','NFA','Σ={0,1}','Slide 1 · accept C','nfa-abc-slide','1110'),
+        ('card1','Ends with 10','DFA','0 and 1','Does it finish with 1 then 0?',
+         'The machine reads one sign at a time and only remembers the last two. If they are 1 then 0, it says yes.',
+         '10, 110','101, 0','Week 7 cont. P2','dfa-ends-10','10'),
+        ('card2','Ends with aab','NFA','a and b','Does it finish with a, a, b?',
+         'The machine guesses where aab might start. If any guess lands right on the end, it says yes. Guessing is what makes it an NFA.',
+         'aab, baab','aba, ab','Week 10 p7 Q2','nfa-ends-aab','baab'),
+        ('card3','Contains bab','DFA','a and b','Is b, a, b hiding inside?',
+         'It looks for b, then a, then b, side by side. Once it finds them, it stays happy no matter what comes next.',
+         'bab, abab','abba, aaa','Week 7 cont. P3','dfa-contains-bab','bab'),
+        ('card1','Begins with 0','DFA','0 and 1','Does it start with 0?',
+         'It only checks the first sign. A 0 first means yes forever. A 1 first sends it to a dead room: no forever.',
+         '0, 010','1, 10','Week 7 cont. P1','dfa-begins-0','010'),
+        ('card2','a then b*','DFA','a and b','One a, then only b\'s?',
+         'The first sign must be a. After that, only b\'s are allowed, or nothing at all. Anything else falls into dead room C.',
+         'a, abbb','b, aba','Slide 3 · accept B','dfa-a-then-bstar','abbb'),
+        ('card3','NFA slide A,B,C','NFA','0 and 1','Ends in 0, never two 0s in a row?',
+         'Every 0 lands in room C, the yes room. A second 0 right after has nowhere to go, so that path dies.',
+         '0, 1110','100, 1','Slide 1 · accept C','nfa-abc-slide','1110'),
     ]
     return ''.join(
-        f'<article class="card" data-card data-machine="{mid}" data-input="{inp}"><div class="img"><img src="svg/{c}.svg" alt="" width="398" height="330" loading="lazy"></div>'
-        f'<div class="body"><h3><button type="button" class="card-go" aria-label="Open {n} in the trace lab with input {inp}">{n}</button></h3><div class="meta"><span class="pill">{k}</span><span>{sig}</span></div>'
-        f'<p class="try">{cite} · try {inp}</p></div></article>'
-        for c,n,k,sig,cite,mid,inp in C
+        f'<article class="card" data-card data-machine="{mid}" data-input="{inp}"><div class="flip">'
+        f'<div class="face front"><div class="img"><img src="svg/{c}.svg" alt="" width="398" height="330" loading="lazy"></div>'
+        f'<div class="body"><h3>{n}</h3><p class="ask">{ask}</p><div class="meta"><span class="pill">{k}</span><span>Uses {sig}</span></div>'
+        f'<button type="button" class="card-flip" aria-expanded="false" aria-controls="cb-{mid}">How it works <span aria-hidden="true">↻</span></button></div></div>'
+        f'<div class="face back" id="cb-{mid}" inert><h3>{n}</h3><p class="why">{why}</p>'
+        f'<p class="yn"><span class="yes">Yes</span> {yes}</p><p class="yn"><span class="no">No</span> {no}</p><p class="try">{cite}</p>'
+        f'<div class="acts"><button type="button" class="card-go" aria-label="Try {n} in the trace lab with input {inp}">Try {inp} in the lab</button>'
+        f'<button type="button" class="card-flip card-back" aria-expanded="true" aria-controls="cb-{mid}">Back <span aria-hidden="true">↺</span></button></div></div>'
+        f'</div></article>'
+        for c,n,k,sig,ask,why,yes,no,cite,mid,inp in C
     )
 TCARDS_PER_PAGE=2
 def tcards():

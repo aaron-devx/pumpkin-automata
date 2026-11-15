@@ -187,3 +187,22 @@
   show(0);
   start();
 })();
+
+/* Problem cards: flip front/back, hidden face is inert, focus follows the flip. */
+(function () {
+  'use strict';
+  document.querySelectorAll('#cards .card').forEach(function (card) {
+    var front = card.querySelector('.front');
+    var back = card.querySelector('.back');
+    if (!front || !back) return;
+    function flip(on) {
+      card.classList.toggle('is-flipped', on);
+      front.inert = on;
+      back.inert = !on;
+      card.querySelectorAll('.card-flip').forEach(function (b) { b.setAttribute('aria-expanded', String(on)); });
+      (on ? back.querySelector('.card-go') : front.querySelector('.card-flip')).focus({ preventScroll: true });
+    }
+    front.querySelector('.card-flip').addEventListener('click', function () { flip(true); });
+    back.querySelector('.card-flip').addEventListener('click', function () { flip(false); });
+  });
+})();

@@ -326,7 +326,9 @@ function selectMachine(id) {
 
 function bindCards() {
   document.querySelectorAll('.card[data-machine], .tcard[data-machine], .feat-go[data-machine]').forEach((card) => {
-    card.addEventListener('click', () => {
+    // Flip cards: only the back's "Try" button loads the lab; the rest of the card flips.
+    const target = card.matches('.card') ? card.querySelector('.card-go') : card;
+    target?.addEventListener('click', () => {
       const sel = els.machine();
       const input = els.input();
       if (!sel || !input) return;

@@ -144,9 +144,23 @@ async function main() {
       return [...document.querySelectorAll('#cards .card')].map((c) => ({ id: c.dataset.machine, input: c.dataset.input, ok: ids.includes(c.dataset.machine) }));
     })()`);
     check('every destination card has data-machine resolving to a real machine', destMachines.length === 6 && destMachines.every((d) => d.ok && d.input), JSON.stringify(destMachines));
+    const flip = await cdp.evaluate(`(async () => {
+      const card = document.querySelector('#cards .card');
+      const sel = document.getElementById('machine-select').value;
+      const before = { flipped: card.classList.contains('is-flipped'), backInert: card.querySelector('.back').inert };
+      card.querySelector('.front .card-flip').click();
+      await new Promise((r) => setTimeout(r, 100));
+      const open = { flipped: card.classList.contains('is-flipped'), frontInert: card.querySelector('.front').inert, backInert: card.querySelector('.back').inert, expanded: card.querySelector('.front .card-flip').getAttribute('aria-expanded'), focusGo: document.activeElement === card.querySelector('.card-go'), labUnchanged: document.getElementById('machine-select').value === sel };
+      card.querySelector('.back .card-flip').click();
+      await new Promise((r) => setTimeout(r, 100));
+      return { before, open, closed: { flipped: card.classList.contains('is-flipped'), backInert: card.querySelector('.back').inert } };
+    })()`);
+    check('problem card flips: back visible + focusable, front inert, lab untouched, flips back', !flip.before.flipped && flip.before.backInert && flip.open.flipped && flip.open.frontInert && !flip.open.backInert && flip.open.expanded === 'true' && flip.open.focusGo && flip.open.labUnchanged && !flip.closed.flipped && flip.closed.backInert, JSON.stringify(flip));
+    const tops = await cdp.evaluate(`[...document.querySelectorAll('#cards .card')].slice(0, 3).map((c) => c.offsetTop)`);
+    check('first row of problem cards aligned (no stagger)', new Set(tops).size === 1, JSON.stringify(tops));
     for (const d of destMachines) {
       const r = await cdp.evaluate(`(async () => {
-        document.querySelector('#cards .card[data-machine="${d.id}"]')?.click();
+        document.querySelector('#cards .card[data-machine="${d.id}"] .card-go')?.click();
         await new Promise((r) => setTimeout(r, 300));
         return { machine: document.getElementById('machine-select').value, input: document.getElementById('string-input').value, verdict: document.getElementById('lab-verdict').textContent.trim() };
       })()`);
