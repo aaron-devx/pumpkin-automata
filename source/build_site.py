@@ -47,12 +47,12 @@ TCARDS_PER_PAGE=2
 def tcards():
     # (title, kind·sigma, quote html, source, machine id, input, avatar)
     T=[
-        ('Ends with 10','DFA · Σ={0,1}','Input <strong>110</strong> → accept. Input <strong>101</strong> → reject. Last two symbols decide.','Week 7','dfa-ends-10','110','frankenstein'),
-        ('Contains bab','DFA · Σ={a,b}','Input <strong>ababb</strong> → accept. Input <strong>abba</strong> → reject.','Week 7','dfa-contains-bab','ababb','mummy'),
-        ('a then b*','DFA · Σ={a,b}','Input <strong>abbb</strong> → accept. Any <strong>b</strong> first → trap.','Week 7','dfa-a-then-bstar','abbb','pumpkin-head'),
-        ('NFA slide','NFA · Σ={0,1}','Input <strong>1110</strong> → ends in C. Input <strong>0</strong> → accept.','Week 10','nfa-abc-slide','1110','vampire'),
-        ('Begins with 0','DFA · Σ={0,1}','Input <strong>010</strong> → accept. Input <strong>10</strong> → reject. Dead state catches a leading 1.','Week 7','dfa-begins-0','010','witch'),
-        ('b* trap','DFA · Σ={a,b}','Input <strong>b</strong> → reject. Trap state never leaves.','Week 7','dfa-a-then-bstar','b','wolf'),
+        ('Ends with 10','DFA · Σ={0,1}','Input <strong>101</strong> → reject. Only a final <strong>10</strong> accepts.','Week 7 cont. P2','dfa-ends-10','101','frankenstein'),
+        ('Ends with aab','NFA · Σ={a,b}','Input <strong>baab</strong> → accept. The NFA guesses where <strong>aab</strong> starts.','Week 10 Q2','nfa-ends-aab','baab','vampire'),
+        ('Contains bab','DFA · Σ={a,b}','Input <strong>abbba</strong> → reject. No <strong>bab</strong> anywhere.','Week 7','dfa-contains-bab','abbba','mummy'),
+        ('Begins with 0','DFA · Σ={0,1}','Input <strong>010</strong> → accept. A leading 1 hits the dead state.','Week 7 cont. P1','dfa-begins-0','010','witch'),
+        ('a then b*','DFA · Σ={a,b}','Input <strong>bbb</strong> → reject. A leading <strong>b</strong> traps the run.','Week 7','dfa-a-then-bstar','bbb','pumpkin-head'),
+        ('NFA slide','NFA · Σ={0,1}','Input <strong>1110</strong> → accept. Ends in C after a 0.','Week 10','nfa-abc-slide','1110','wolf'),
     ]
     def one(c):
         n,pl,q,dt,mid,inp,av=c
@@ -62,17 +62,17 @@ def tcards():
     pages=[''.join(one(c) for c in T[i:i+TCARDS_PER_PAGE]) for i in range(0,len(T),TCARDS_PER_PAGE)]
     return ''.join(f'<div class="cpage" role="group" aria-roledescription="slide" aria-label="Page {i+1} of {len(pages)}">{p}</div>' for i,p in enumerate(pages))
 def plans():
-    chk='<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="8" fill="currentColor"/><path d="M5.2 9.2l2.5 2.4 5-5" stroke="var(--bg)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-    P=[
-        ('Pick<br>Machine','01','Choose a finite acceptor',['Open the dropdown in the hero','Match the slide problem','DFA or NFA badge shown'],'#lab',''),
-        ('Type<br>String','02','Symbols from Σ',['Use only letters in Σ','Example: 1010 or bab','Invalid chars → INVALID'],'#top','dk'),
-        ('Trace +<br>Verdict','03','Step the run',['Slider or Next / Back','Highlight active state(s)','ACCEPT or REJECT at end'],'#lab',''),
+    # (title, symbol, one-line meaning, extra class)
+    G=[
+        ('Current<br>state','●','The highlighted node is where the machine is now.',''),
+        ('Verdict<br>colour','✓ ✗','Green = accepted. Red = rejected.','dk'),
+        ('NFA<br>branches','≡','Several states can be active at once.',''),
+        ('Dead<br>branch','∅','That branch dies: no move for the symbol.','dk'),
     ]
     return ''.join(
-        f'<div class="plan-col" data-plan><div class="plan {k}"><h3>{h}</h3><div class="amt step-num">{a}</div>'
-        f'<h5>{t}</h5><hr><ul>{"".join(f"<li>{chk}{x}</li>" for x in L)}</ul>'
-        f'<a class="cta" href="{c}">Go</a></div><div class="review">AL102</div></div>'
-        for h,a,t,L,c,k in P
+        f'<div class="plan-col" data-plan><div class="plan {k}"><h3>{h}</h3><div class="amt step-num" aria-hidden="true">{s}</div>'
+        f'<h5>{t}</h5></div></div>'
+        for h,s,t,k in G
     )
 def copy_automata():
     import shutil

@@ -173,6 +173,31 @@ async function main() {
     })()`);
     check('clicking a card sets lab machine + input and runs', cardRun.machine === cardRun.want.id && cardRun.input === cardRun.want.s && cardRun.verdict !== '', JSON.stringify(cardRun));
 
+    const guide = await cdp.evaluate(`({
+      nav: [...document.querySelectorAll('nav.menu a')].map((a) => a.textContent.trim()),
+      heading: document.querySelector('#packages h2')?.innerText.replace(/\\s+/g, ' ').trim(),
+      items: document.querySelectorAll('#packages .plan').length,
+      heroBtn: document.querySelector('.btn-o[href="#packages"]')?.textContent.trim(),
+    })`);
+    check('nav has "Read trace" and no "Steps"', guide.nav.includes('Read trace') && !guide.nav.includes('Steps'), JSON.stringify(guide.nav));
+    check('guide section heading is "How to read the trace"', guide.heading === 'How to read the trace', JSON.stringify(guide));
+    check('guide has 4 items', guide.items === 4, JSON.stringify(guide));
+    check('hero button points to the read-trace guide', guide.heroBtn === 'How to read the trace', JSON.stringify(guide));
+    const wantCards = [
+      ['dfa-ends-10', '101', 'REJECTED'], ['nfa-ends-aab', 'baab', 'ACCEPTED'], ['dfa-contains-bab', 'abbba', 'REJECTED'],
+      ['dfa-begins-0', '010', 'ACCEPTED'], ['dfa-a-then-bstar', 'bbb', 'REJECTED'], ['nfa-abc-slide', '1110', 'ACCEPTED'],
+    ];
+    const gotCards = await cdp.evaluate(`[...document.querySelectorAll('#tcards .tcard')].map((c) => [c.dataset.machine, c.dataset.input])`);
+    check('example cards are the 6 slide strings in machine order', JSON.stringify(gotCards) === JSON.stringify(wantCards.map((c) => c.slice(0, 2))), JSON.stringify(gotCards));
+    for (const [id, s, want] of wantCards) {
+      const r = await cdp.evaluate(`(async () => {
+        document.querySelector('#tcards .tcard[data-machine="${id}"][data-input="${s}"]')?.click();
+        await new Promise((r) => setTimeout(r, 300));
+        return { machine: document.getElementById('machine-select').value, input: document.getElementById('string-input').value, verdict: document.getElementById('lab-verdict').textContent.trim() };
+      })()`);
+      check(`card ${id} "${s}" loads and shows ${want}`, r.machine === id && r.input === s && r.verdict.toUpperCase().includes(want), JSON.stringify(r));
+    }
+
     const heroCopy = await cdp.evaluate(`({ eyebrow: document.querySelector('.hero .eyebrow')?.textContent.trim(), lead: document.querySelector('.hero .lead')?.textContent.trim() })`);
     check('hero eyebrow reads "DFA & NFA Simulator"', heroCopy.eyebrow === 'DFA & NFA Simulator', JSON.stringify(heroCopy));
     check('hero subtitle is the new copy', heroCopy.lead === 'Pick a slide problem, type a string, watch each step.', JSON.stringify(heroCopy));

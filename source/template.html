@@ -178,6 +178,8 @@ button{font:inherit}
 .plans{display:grid;grid-template-columns:repeat(3,minmax(0,414px));justify-content:center;gap:clamp(20px,2.1vw,27px);margin-top:clamp(56px,5.6vw,84px);align-items:start}
 .plan-col{display:flex;flex-direction:column;align-items:stretch}
 .plan-col:nth-child(odd){margin-top:61px}
+.plans.guide{grid-template-columns:repeat(4,minmax(0,300px))}
+.plans.guide .plan h5{margin-top:clamp(20px,2vw,28px);padding-bottom:12px}
 .plan{position:relative;border-radius:22px;background:var(--plan-bg);color:var(--navy);padding:clamp(36px,3.3vw,50px) clamp(20px,2vw,30px) clamp(22px,2vw,30px);display:flex;flex-direction:column;align-items:center;transition:transform .55s cubic-bezier(.2,.8,.2,1),box-shadow .55s;--bg:var(--plan-bg)}
 .plan:hover{transform:translateY(-8px);box-shadow:0 30px 60px -34px rgba(13,34,48,.5)}
 .plan.dk{background:var(--plan-dk);color:#fff;--bg:var(--plan-dk)}
@@ -294,7 +296,7 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
   .menu,.auth{display:none}
   .burger{display:block}
   .why .grid{grid-template-columns:1fr;gap:48px}
-  .plans{grid-template-columns:minmax(0,440px)}
+  .plans,.plans.guide{grid-template-columns:minmax(0,440px)}
   .plan-col:nth-child(odd){margin-top:0}
   .plans{gap:40px}
   .fbody{grid-template-columns:1fr}
@@ -373,13 +375,13 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
 <header class="nav" id="nav">
  <div class="container">
   <a class="logo" href="#top" aria-label="StateStream home"><img src="svg/logo.svg" width="34" height="34" alt="">StateStream</a>
-  <nav class="menu" aria-label="Primary"><a href="#top">Lab</a><a href="#destinations">Problems</a><a href="#packages">Steps</a><a href="#lab">Trace</a></nav>
+  <nav class="menu" aria-label="Primary"><a href="#top">Lab</a><a href="#destinations">Problems</a><a href="#packages">Read trace</a><a href="#lab">Trace</a></nav>
   <div class="auth"><a href="#about">AL102</a><a class="reg" href="#lab">Run</a></div>
   <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="drawer"><i></i><i></i><i></i></button>
  </div>
 </header>
 <div class="drawer" id="drawer" aria-hidden="true">
- <a href="#top">Lab</a><a href="#destinations">Problems</a><a href="#packages">Steps</a><a href="#lab">Trace</a>
+ <a href="#top">Lab</a><a href="#destinations">Problems</a><a href="#packages">Read trace</a><a href="#lab">Trace</a>
  <div class="d-auth"><a href="#about">AL102</a><a class="on" href="#lab">Run</a></div>
 </div>
 
@@ -421,7 +423,7 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
   <div>
    <h2 class="h" data-reveal>Why<br><span class="sw" style="--l:6%;--r:-2%;--b:-.02em">DFA &amp; NFA</span>?</h2>
    <p class="t" data-reveal>Both accept regular languages. A DFA has one next state. An NFA may branch — accept if any path ends in F.</p>
-   <div data-reveal><a class="btn-o" href="#packages">See the 3 steps</a></div>
+   <div data-reveal><a class="btn-o" href="#packages">How to read the trace</a></div>
   </div>
   <div class="feats">
    <div class="feat" data-reveal="right"><div class="num">01</div><div class="tx"><h4>DFA</h4><p>One next state for each state and symbol. The string takes one path, then accepts or rejects at the end. Like a road sign: &ldquo;Turn Right&rdquo; is one instruction.</p><button type="button" class="feat-go" data-machine="dfa-ends-10" data-input="0110" aria-label="Try it: load the DFA example in the trace lab">Try it</button></div></div>
@@ -452,9 +454,9 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
 
 <section class="pricing" id="packages">
  <div class="container">
-  <h2 class="h" data-reveal>Three <span class="sw" style="--l:-2%;--r:-2%">steps</span><br>per run</h2>
-  <p class="lead-c" data-reveal>Pick machine → type string → scrub the trace.</p>
-  <div class="plans" id="plans">{{PLANS}}</div>
+  <h2 class="h" data-reveal>How to <span class="sw" style="--l:-2%;--r:-2%">read</span><br>the trace</h2>
+  <p class="lead-c" data-reveal>Four marks tell you what every run is doing.</p>
+  <div class="plans guide" id="plans">{{PLANS}}</div>
  </div>
 </section>
 
@@ -521,7 +523,7 @@ footer{position:relative;background:linear-gradient(var(--hero-bg),var(--foot-b)
     <a class="fcontact" href="#lab">Open lab<svg width="30" height="14" viewBox="0 0 30 14"><path d="M1 7h27M22 1l6 6-6 6" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     <a class="fmail" href="#about">AL102 · Formal Language</a>
    </div>
-   <nav class="flinks" aria-label="Footer" data-reveal><a class="on" href="#about">Theory</a><a href="#lab">Trace</a><a href="#destinations">Problems</a><a href="#packages">Steps</a><a href="#top">Hero</a></nav>
+   <nav class="flinks" aria-label="Footer" data-reveal><a class="on" href="#about">Theory</a><a href="#lab">Trace</a><a href="#destinations">Problems</a><a href="#packages">Read trace</a><a href="#top">Hero</a></nav>
   </div>
   <div class="fhr"></div>
   <div class="copy">© StateStream · AL102 lab demo.</div>
