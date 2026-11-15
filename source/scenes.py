@@ -144,6 +144,8 @@ def footer_art():
     s.p(smooth([(560,430),(700,424),(860,440),(760,446)],True),'#a8d04e',opacity=.8)
     # haunted house on the meadow, smoke from the chimney
     k,ox,oy=.62,1050,462
+    s.raw_def('<radialGradient id="hglow"><stop offset="0" stop-color="#ff9a3c" stop-opacity=".32"/><stop offset=".5" stop-color="#ff9a3c" stop-opacity=".1"/><stop offset="1" stop-color="#ff9a3c" stop-opacity="0"/></radialGradient>')
+    s.add(f'<ellipse cx="{ox+100*k}" cy="{oy-90*k}" rx="260" ry="150" fill="url(#hglow)"/>')
     s.raw_def('<radialGradient id="puff"><stop offset="0" stop-color="#ffffff" stop-opacity=".95"/><stop offset=".55" stop-color="#f4fbff" stop-opacity=".7"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>')
     s.add(smoke(ox+222*k,oy-236*k,6,8.5,'url(#puff)',6,120,40,2.2))
     s.add(house(s,ox,oy,k,door=True))
