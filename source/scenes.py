@@ -111,8 +111,6 @@ def why_scene():
 
 def footer_art():
     s=S(1504,512)
-    sky=s.lg('fsky',[(0,'#1a6fb8'),(.6,'#3fa0e0'),(1,'#7cc8ef')],0,0,0,420,1)
-    s.p('M0 0H1504V512H0Z',sky)
     s.add(f'<g transform="translate(640 0)">{night_sky(s)}</g>')
     cl=lambda x,y,w,h,b: f'<path d="{streak(x,y,w,h,b)}" fill="#ffffff" opacity=".22"/>'
     s.add(drift(cl(190,290,300,40,((.3,.15,1),(.55,.15,.6))),190,490,190))
