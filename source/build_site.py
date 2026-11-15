@@ -68,10 +68,10 @@ def tcards():
 def plans():
     # (title, symbol, one-line meaning, extra class)
     G=[
-        ('Current<br>state','●','The highlighted node is where the machine is now.',''),
-        ('Verdict<br>colour','✓ ✗','Green = accepted. Red = rejected.','dk'),
-        ('NFA<br>branches','≡','Several states can be active at once.',''),
-        ('Dead<br>branch','∅','That branch dies: no move for the symbol.','dk'),
+        ('Current<br>state','●','The orange circle shows where the machine is now.',''),
+        ('Verdict<br>colour','✓ ✗','Green means yes, the string passes. Red means no.','dk'),
+        ('NFA<br>branches','≡','An NFA can be in many circles at the same time.',''),
+        ('Dead<br>branch','∅','∅ means this path stops. It has no move for this letter.','dk'),
     ]
     return ''.join(
         f'<div class="plan-col" data-plan><div class="plan {k}"><h3>{h}</h3><div class="amt step-num" aria-hidden="true">{s}</div>'
