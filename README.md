@@ -70,7 +70,7 @@ No `npm install`. Optional CDN (Lenis + GSAP) adds scroll polish; the lab works 
 | Example strings | Carousel of slide samples |
 | Lab | Verdict, δ table, graph, step slider, trace table |
 
-Canonical app: **repo root `index.html`** (from `source/template.html`). Legacy `al102/` is not the class demo path.
+Canonical app: **repo root `index.html`** (built from `source/template.html`).
 
 ## Machines
 
