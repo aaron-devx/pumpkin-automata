@@ -1,16 +1,26 @@
-graphify-out/
+# Local agent / vault (not part of the published lab)
+.ogi/
+AGENTS.md
 brainstorms/
+
+# Task tooling & editor config
+.moat/
+.claude/
+.windsurf/
+.codex/
+graphify-out/
+
+# Python
 __pycache__/
 *.pyc
 
-# Moat task system
-.moat/
+# Local QA shots and one-off scripts
+work/
 
-# Claude Code configuration
-.claude/
+# Dev plans (personal; not shipped)
+DELEGATE-PLAN.md
+DRAWBRIDGE-PLAN.md
+HANDOFF.md
 
-# Windsurf configuration
-.windsurf/
-
-# Codex CLI configuration
-.codex/
+# Banner source PNG (README uses .webp; keep repo lean)
+assets/pumpkin-automata-banner.png
